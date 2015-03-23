@@ -1,2 +1,2 @@
 # cGIF
-just another GIF decoder/encoder[TODO]
+just another GIF decoder/encoder[TODO] written in C
