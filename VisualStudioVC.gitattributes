@@ -1,0 +1,22 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+#sources
+*.c text
+*.cpp text
+*.h text
+
+# Compiled Dynamic libraries
+*.dll binary
+
+# Compiled Static libraries
+*.lib binary
+
+# Executables
+*.exe binary
+
+# Custom for Visual Studio C/C++ solutions/projects
+*.sln text eol=crlf merge=union
+*.vcxproj text eol=crlf merge=union
+*.filters text eol=crlf merge=union
+*.user text eol=crlf merge=union
