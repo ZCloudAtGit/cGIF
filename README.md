@@ -14,7 +14,8 @@ GIFSample - some GIF files that used as test materials
 Write some demos that render a GIF image with Direct3D 9 and OpenGL4.(Working on..)
 
 #LICENSE
-   cGIF, a GIF decoder/encoder
+   __GPLv3__  
+   cGIF, a GIF decoder/encoder  
    Copyright (C) 2015  Zou Wei(zwcloud@yeah.net)
    
    This program is free software; you can redistribute it and/or modify
