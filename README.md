@@ -6,12 +6,13 @@ Written with VS2013.
 cGIF - the cGIF library (now compiled as a static lib)<br/>
 cGIFTest - some unit test<br/>
 cGIF_ToString - a tool that print a GIF file content as string (a win32 console application)<br/>
-ViewViaGDI - a demo program that can render a static GIF file with GDI (a win32 window application)<br/>
+ViewViaGDI_Static - a demo program that can render a static GIF file with GDI (a win32 window application)<br/>
+ViewViaDirect3D9_Static - a demo program that can render a static GIF file with Direct3D 9 (a win32 window application)<br/>
 ViewViaGDI_Dynamic - a demo program that can render a dynamic GIF file with GDI (a win32 window application)<br/>
 GIFSample - some GIF files that used as test materials
 
 #TODO
-Write some demos that render a GIF image with Direct3D 9 and OpenGL4.(Working on..)
+Write some demos that render a GIF image with OpenGL4.(Working on..)
 
 #LICENSE
    __GPLv3__  

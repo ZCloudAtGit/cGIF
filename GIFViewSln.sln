@@ -13,7 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cGIF_ToString", "cGIF_ToStr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cGIFTest", "cGIFTest\cGIFTest.vcxproj", "{0404FA8E-7D38-4ADF-B6DB-1CEEDDA2BABD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewViaDirect3D_Static", "ViewViaDirect3D_Static\ViewViaDirect3D_Static.vcxproj", "{4D1D18B1-1D5C-4917-9D09-8F3B8DC00D09}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewViaDirect3D9_Static", "ViewViaDirect3D9_Static\ViewViaDirect3D9_Static.vcxproj", "{4D1D18B1-1D5C-4917-9D09-8F3B8DC00D09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4A3FCC85-9695-4850-BDF7-9CD3A72182D6} = {4A3FCC85-9695-4850-BDF7-9CD3A72182D6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
