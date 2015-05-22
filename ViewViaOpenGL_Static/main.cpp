@@ -24,19 +24,34 @@ extern "C"
 #pragma comment(lib, "../Debug/cGIF.lib")
 
 #define APP_TITLE "GIF Viewer via OpenGL 4 (Static)"
-// Global variables
+
+//用于颜色表（RGB顺序，注：GDI的RGBTRIPLE为BGR顺序）
+typedef struct _tagRGBTriple
+{
+	BYTE r;
+	BYTE g;
+	BYTE b;
+} RGBTriple;
 
 // The main window class name.
-static char szWindowClass[] = "win32app";
+static char szWindowClass[] = "ViewViaOpenGL4_StaticWindowClass";
 // The string that appears in the application's title bar.
 static char szTitle[] = APP_TITLE;
 HDC hdc = 0;
 
 //GIF相关数据
-cGif_State state;
+//cGIF参数
 unsigned char* pColorIndexArray = NULL;
-ColorTable* colorTable = NULL;
-unsigned int width = 0, height = 0;
+unsigned int canvasWidth = 0, canvasHeight = 0;
+unsigned int image_position_x = 0, image_position_y = 0;
+unsigned int imageWidth = 0;
+unsigned int imageHeight = 0;
+RGBTriple* palette = nullptr;
+unsigned char palette_color_count;
+unsigned char background_color_index;
+unsigned char transparent_color_index;
+char flag = 0;
+int disposalMethod = 0;
 
 //OpenGL相关数据
 HGLRC hglrc = 0;
@@ -73,7 +88,7 @@ void _checkOGLError(char *file, int line)
 	}
 }
 
-void LoadQuad();
+void LoadQuad(int width, int height);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -119,14 +134,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	hdc = GetDC(hWnd);//保存DC到全局变量中
 
 	//读取GIF图像，取得图像数据
-	cGif_decode_static(&pColorIndexArray, &width, &height, &state, "laser.gif");
-	if (state.imgDesc.LocalColorTableFlag)
+	cGif_Error error = cGif_decode_static_indexed(
+		lpCmdLine,
+		&pColorIndexArray,
+		&canvasWidth, &canvasHeight,
+		&background_color_index,
+		&image_position_x, &image_position_y,
+		&imageWidth, &imageHeight,
+		(unsigned char**)&palette, &palette_color_count,
+		&transparent_color_index,
+		&flag);
+	if (error != cGif_Error::cGif_Success)
 	{
-		colorTable = &state.lct;
-	}
-	else
-	{
-		colorTable = &state.gct;
+		char buffer[128];
+		sprintf(buffer, "解析GIF图像失败！错误：%s", cGif_error_text(error));
+		MessageBoxA(NULL, buffer, APP_TITLE, NULL);
+		return 1;
 	}
 
 	ShowWindow(hWnd, nCmdShow);
@@ -148,13 +171,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			assert(hglrc != NULL);
 			if (IsLoaded == FALSE)//判断是否已加载图像数据
 			{
+				RECT rc;
+				::GetClientRect(hWnd, &rc);
+				int rc_width = rc.right - rc.left;
+				int rc_height = rc.bottom - rc.top;
 				//设置OpenGL的一些状态
 				//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				glEnable(GL_TEXTURE_1D);
 				glEnable(GL_TEXTURE_2D);
 				glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
-				glViewport(150, 150, width, height);
-				LoadQuad();
+				glViewport(0.5*(rc_width - imageWidth), 0.5*(rc_width - imageHeight), imageWidth, imageHeight);
+				LoadQuad(imageWidth, imageHeight);
 				//将图像数据传送到OpenGL引擎
 				LoadTexture();
 				//初始化shader
@@ -246,7 +273,7 @@ void LoadTexture()
 		checkOGLError;
 
 		glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8UI,
-			256, 0, GL_RGB_INTEGER, GL_UNSIGNED_BYTE, colorTable->vColor);
+			palette_color_count, 0, GL_RGB_INTEGER, GL_UNSIGNED_BYTE, palette);
 		checkOGLError;
 
 		glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -268,7 +295,7 @@ void LoadTexture()
 		checkOGLError;
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_R8UI,
-			width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, pColorIndexArray);
+			imageWidth, imageHeight, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, pColorIndexArray);
 		checkOGLError;
 
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -286,6 +313,7 @@ void InitShader()
 
 	// Shader
 	{
+		//TODO create WVP matrix and multiply it with the vertex position
 		static const char* vertexShaderString =
 			"#version 410 core\n"
 			"layout(location = 0) in vec2 in_position;"
@@ -313,6 +341,7 @@ void InitShader()
 
 		static const char* fragmentShaderString =
 			"#version 410 core\n"
+			"uniform float transparent_color_index;"
 			"in vec2 tex_coord0;"
 			"layout (location = 0) out vec4 color;"
 			"uniform usampler1D colorTable;"
@@ -321,6 +350,10 @@ void InitShader()
 			"{"
 			"	uint colorindex = texture(picture, tex_coord0).x;"
 			"	color = texelFetch(colorTable, int(colorindex), 0)/256.0f;"
+			"	if (colorindex == transparent_color_index)"
+			"	{"
+			"		discard;"
+			"	}"
 			"}";
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		checkOGLError;
@@ -363,9 +396,9 @@ void InitShader()
 	}
 }
 
-void LoadQuad()
+void LoadQuad(int width, int height)
 {
-	// 一个长方形，图像会被绘制在它上面
+	// a Quad to render the image
 	static const GLfloat quad_data[] =
 	{
 		// Vertex positions
@@ -439,11 +472,22 @@ void DrawPicture()
 	//picture
 	GLint pictureLocation = glGetUniformLocation(theShaderProgram, "picture");
 	checkOGLError;
-	if (ctLocation == -1)
+	if (pictureLocation == -1)
 	{
 		OutputDebugStringA("Error: semantic <picture>不存在！\n");
 		exit(1);
 	}
+
+	//transparentColorIndex
+	GLint transparentColorIndexLocation;
+	transparentColorIndexLocation = glGetUniformLocation(theShaderProgram, "transparent_color_index");
+	checkOGLError;
+	if (transparentColorIndexLocation == -1)
+	{
+		OutputDebugStringA("Error: semantic <transparent_color_index>不存在！\n");
+		exit(1);
+	}
+
 
 	glActiveTexture(GL_TEXTURE1);
 	checkOGLError;
@@ -452,6 +496,9 @@ void DrawPicture()
 	checkOGLError;
 
 	glUniform1i(pictureLocation, 1);
+	checkOGLError;
+
+	glUniform1f(transparentColorIndexLocation, transparent_color_index);
 	checkOGLError;
 
 
