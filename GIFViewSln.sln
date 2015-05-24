@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewViaDirect3D9_Static", "
 		{4A3FCC85-9695-4850-BDF7-9CD3A72182D6} = {4A3FCC85-9695-4850-BDF7-9CD3A72182D6}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewViaOpenGL_Static", "ViewViaOpenGL_Static\ViewViaOpenGL_Static.vcxproj", "{6B685CE1-046B-46DC-BEBD-47CEF89F8773}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewViaOpenGL4_Static", "ViewViaOpenGL4_Static\ViewViaOpenGL4_Static.vcxproj", "{6B685CE1-046B-46DC-BEBD-47CEF89F8773}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
