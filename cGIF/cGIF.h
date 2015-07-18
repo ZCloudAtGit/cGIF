@@ -1,6 +1,6 @@
 /*
-(c) 2014-2015 cloud
-Website: http:\\cloud.s2.jutuo.net
+(c) 2014-2015 Zou Wei
+Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
 This code is licensed under the GPL license. See Licence.

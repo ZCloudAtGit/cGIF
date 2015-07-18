@@ -1,6 +1,6 @@
 /*
-(c) 2014-2015 cloud
-Website: http:\\cloud.s2.jutuo.net
+(c) 2014-2015 Zou Wei
+Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
 This code is licensed under the GPL license. See Licence.
@@ -319,9 +319,10 @@ cGif_Error cGif_decode_dynamic_indexed(
 		}
 		else if (byteBuf0 == 0x21 && byteBuf1 == 0xfe)
 		{
-			CommentExtension CE = { 0 };
-			ReadCE(&CE, file);//TODO: Just skip it: no need to read.
-			ReleaseSubBlock(NULL, NULL, &CE);
+			//CommentExtension CE = { 0 };
+			//ReadCE(&CE, file);//TODO: Just skip it: no need to read.
+			//ReleaseSubBlock(NULL, NULL, &CE);
+			SkipCE(file);
 		}
 		else if (byteBuf0 == 0x3B)//encounter the end of file data
 		{

@@ -1,6 +1,6 @@
 /*
-(c) 2014-2015 cloud
-Website: http:\\cloud.s2.jutuo.net
+(c) 2014-2015 Zou Wei
+Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
 This code is licensed under the GPL license. See Licence.
@@ -648,6 +648,28 @@ void ReadCE(CommentExtension* pCommentExt, FILE* file)
 	}
 	assert(byteBuf == 0);
 	pCommentExt->BlockTerminator = 0;
+}
+
+void SkipCE(FILE* file)
+{
+	unsigned char byteBuf = 0;
+	int i = 0;
+
+	fread(&byteBuf, sizeof(byteBuf), 1, file);
+	assert(0x21 == byteBuf);
+	fread(&byteBuf, sizeof(byteBuf), 1, file);
+	assert(0xfe == byteBuf);
+	//Read data blocks(256 blocks at most)
+	for (i = 0; i < 256; ++i)
+	{
+		fread(&byteBuf, sizeof(byteBuf), 1, file);
+		if (byteBuf == 0)
+		{
+			break;
+		}
+		fseek(file, sizeof(unsigned char), SEEK_CUR);
+	}
+	assert(byteBuf == 0);
 }
 #pragma endregion
 
