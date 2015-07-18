@@ -67,10 +67,7 @@ cGif_Error cGif_decode_static_indexed(
 /**
 @brief Decode a dynamic GIF file into color indexes
 
-You should call free() to release
-\a indexes, \a image_position_x, \a image_position_y,
-\a imageWidth, \a imageHeight, \a palette, \a palette_color_count
-when you have copied data from them.
+You should call free() to release \a indexes and \a palette when you have copied data from them.
 
 About flag:
 bit 76543210 (from high to low)
