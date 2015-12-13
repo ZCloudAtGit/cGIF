@@ -14,14 +14,12 @@ This code is licensed under the Apache 2.0 license. See Licence.
 #include <stdlib.h>
 #include <assert.h>
 
-#include <Windows.h>
-
 //#define Do_Benchmark_for_DecompressImageData
 //#define Dump_Index_Array
 
-#pragma region »ù´¡½á¹¹²Ù×÷º¯Êı
+#pragma region åŸºç¡€ç»“æ„æ“ä½œå‡½æ•°
 
-#pragma region SubBlock²Ù×÷º¯Êı¶¨Òå
+#pragma region SubBlockæ“ä½œå‡½æ•°å®šä¹‰
 //Release allocated memory for Sub Data
 void ReleaseSubBlock(ImageData* pImgData, ApplicationExtension* pAppExt, CommentExtension* pCE)
 {
@@ -59,7 +57,7 @@ void ReleaseSubBlock(ImageData* pImgData, ApplicationExtension* pAppExt, Comment
 	}
 }
 
-//½«ImageDataÖĞµÄSubblockÊı¾İÕûºÏÎªÒ»Õû¿é
+//å°†ImageDataä¸­çš„Subblockæ•°æ®æ•´åˆä¸ºä¸€æ•´å—
 void CombineSubBlocks(ImageData* pImgData, unsigned char** pCodeData, unsigned int* pCodeDataByteSize)
 {
 	unsigned int i = 0;
@@ -82,7 +80,7 @@ void CombineSubBlocks(ImageData* pImgData, unsigned char** pCodeData, unsigned i
 
 
 #ifdef Dump_SubBlock_Data_of_ImageData
-	//´òÓ¡ËùÓĞsubblock
+	//æ‰“å°æ‰€æœ‰subblock
 	for (i = 0; i < pImgData->SubBlockCount; ++i)
 	{
 		printf("Subblock%02x(size %d):\n", i, pImgData->SubBlockSize[i]);
@@ -104,13 +102,13 @@ void CombineSubBlocks(ImageData* pImgData, unsigned char** pCodeData, unsigned i
 }
 #pragma endregion
 
-#pragma region ½âÑ¹ËõÏà¹Øº¯Êı¶¨Òå
-//´ÓcodeÊı¾İ¿éÖĞÌáÈ¡codeĞòÁĞ
+#pragma region è§£å‹ç¼©ç›¸å…³å‡½æ•°å®šä¹‰
+//ä»codeæ•°æ®å—ä¸­æå–codeåºåˆ—
 cGif_Error ExtractCodeArray(unsigned char* CodeData, unsigned int CodeDataByteSize,
 	unsigned int LZWMinCodeSize,
 	unsigned int** ppCodeArray, unsigned int* pCodeArrayCount)
 {
-	unsigned int codeLength = LZWMinCodeSize + 1;//³õÊ¼Code³¤¶È
+	unsigned int codeLength = LZWMinCodeSize + 1;//åˆå§‹Codeé•¿åº¦
 	unsigned int offset = 0;
 #ifdef Dump_Processing_Procedure_of_Extracting_Code_Sequence
 	unsigned int count = 0;
@@ -122,11 +120,11 @@ cGif_Error ExtractCodeArray(unsigned char* CodeData, unsigned int CodeDataByteSi
 	unsigned int EOICode = ClearCode + 1;		//EOI Code
 
 #ifdef Dump_Processing_Procedure_of_Extracting_Code_Sequence
-	printf("CodeĞòÁĞ:\n");
+	printf("Codeåºåˆ—:\n");
 #endif
 	while (code != EOICode)
 	{
-		//¶ÁÈ¡1¸öcode
+		//è¯»å–1ä¸ªcode
 		code = GetCode(CodeData, offset, codeLength);
 		(*ppCodeArray)[*pCodeArrayCount] = code;
 		(*pCodeArrayCount)++;
@@ -140,41 +138,41 @@ cGif_Error ExtractCodeArray(unsigned char* CodeData, unsigned int CodeDataByteSi
 		if (code == ClearCode)
 		{
 #ifdef Dump_Processing_Procedure_of_Extracting_Code_Sequence
-			printf("Óöµ½Clear code(#%03x)£¬ÖØÖÃcode³¤¶ÈÎªclear codeµÄ³¤¶È\n", code);
+			printf("é‡åˆ°Clear code(#%03x)ï¼Œé‡ç½®codeé•¿åº¦ä¸ºclear codeçš„é•¿åº¦\n", code);
 #endif
 			codeLength = LZWMinCodeSize + 1;
-			n = 1;//ÖØÖÃ(°üº¬Õâ¸öclear codeÔÚÄÚ)
+			n = 1;//é‡ç½®(åŒ…å«è¿™ä¸ªclear codeåœ¨å†…)
 			continue;
 		}
 
-		//¼ì²éÏÂ´Î¶ÁÈ¡codeÊ±£¬ÊÇ·ñĞèÒªÔö¼Ó³¤¶È
+		//æ£€æŸ¥ä¸‹æ¬¡è¯»å–codeæ—¶ï¼Œæ˜¯å¦éœ€è¦å¢åŠ é•¿åº¦
 		if (n == 1 << (codeLength - 1))
 		{
-			if (codeLength == 12)//³¤¶ÈÎª12Ê±
+			if (codeLength == 12)//é•¿åº¦ä¸º12æ—¶
 			{
 #ifdef Dump_Processing_Procedure_of_Extracting_Code_Sequence
-				printf("code³¤¶È½«³¬¹ı12£¬code³¤¶È½«¹Ì¶¨Îª12Ö±µ½¶ÁÈ¡µ½bit³¤¶ÈÎª12µÄclear code(#%03x)\n", ClearCode);
+				printf("codeé•¿åº¦å°†è¶…è¿‡12ï¼Œcodeé•¿åº¦å°†å›ºå®šä¸º12ç›´åˆ°è¯»å–åˆ°bité•¿åº¦ä¸º12çš„clear code(#%03x)\n", ClearCode);
 #endif
 			}
 			else
 			{
-				++codeLength;//Ôö¼Ó³¤¶È
-				n = 0;//ÖØÖÃ
+				++codeLength;//å¢åŠ é•¿åº¦
+				n = 0;//é‡ç½®
 			}
 		}
 	}
-	//¼ì²éÊÇ·ñ¶Áµ½ÁË×îºó1×Ö½Ú£¨¿¼ÂÇµ½¿ÉÄÜÓĞ¸ßÎ»²¹0µÄÇé¿ö£¬ËùÒÔ×îºóÒ»¸öcode(EOI code)¶ÁÍêÊ±offsetºÜÓĞ¿ÉÄÜ²»ÔÚcodedataÄ©Î²£©
-	//offset==(CodeDataByteSize-1)*8Ê±£¬offsetÖ¸Ïò×îºóÒ»×Ö½ÚµÄµÚ1Î»£¬ÕâÒ²ÊÇ²»¶ÔµÄ£¬ÒòÎªÕâ1Î»ÊÇÔ¤ÏëÖĞÏÂÒ»´Î¶ÁÈ¡µÄcodeµÄµÚ1Î»
+	//æ£€æŸ¥æ˜¯å¦è¯»åˆ°äº†æœ€å1å­—èŠ‚ï¼ˆè€ƒè™‘åˆ°å¯èƒ½æœ‰é«˜ä½è¡¥0çš„æƒ…å†µï¼Œæ‰€ä»¥æœ€åä¸€ä¸ªcode(EOI code)è¯»å®Œæ—¶offsetå¾ˆæœ‰å¯èƒ½ä¸åœ¨codedataæœ«å°¾ï¼‰
+	//offset==(CodeDataByteSize-1)*8æ—¶ï¼ŒoffsetæŒ‡å‘æœ€åä¸€å­—èŠ‚çš„ç¬¬1ä½ï¼Œè¿™ä¹Ÿæ˜¯ä¸å¯¹çš„ï¼Œå› ä¸ºè¿™1ä½æ˜¯é¢„æƒ³ä¸­ä¸‹ä¸€æ¬¡è¯»å–çš„codeçš„ç¬¬1ä½
 	if (offset <= (CodeDataByteSize - 1) * 8)
 	{
-		//printf("´íÎó£ºÍ¼ÏñÊı¾İÎ´¶ÁÈ¡Íê³É£¬¾ÍÓöµ½ÁËEOI code(#%d)\n", EOICode);
+		//printf("é”™è¯¯ï¼šå›¾åƒæ•°æ®æœªè¯»å–å®Œæˆï¼Œå°±é‡åˆ°äº†EOI code(#%d)\n", EOICode);
 		return cGif_Encounter_EOI_Before_ImageData_Completed;
 	}
-	//printf("¶ÁÈ¡µ½ÁËEOI code£¬codeĞòÁĞ½áÊø\n");
+	//printf("è¯»å–åˆ°äº†EOI codeï¼Œcodeåºåˆ—ç»“æŸ\n");
 	return cGif_Success;
 }
 
-//½«codeĞòÁĞ·­ÒëÎªÑÕÉ«Ë÷Òı
+//å°†codeåºåˆ—ç¿»è¯‘ä¸ºé¢œè‰²ç´¢å¼•
 cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImgData, ImageDescriptor* pImgDesc, unsigned int* CodeArray, unsigned int CodeArrayCount)
 {
 	unsigned int i = 0, j = 0;
@@ -189,27 +187,27 @@ cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImg
 
 	ClearCode = 1 << pImgData->LZWMinCodeSize;//Clear Code
 	EOICode = ClearCode + 1;//EOI Code
-	//·ÖÅäÑÕÉ«Ë÷ÒıµÄÄÚ´æ´óĞ¡
+	//åˆ†é…é¢œè‰²ç´¢å¼•çš„å†…å­˜å¤§å°
 	*ppColorIndexArray = (unsigned char*)malloc(pImgDesc->Width*pImgDesc->Height*sizeof(unsigned char));
 
 	InitialColorTableLength = 2 << (pImgData->LZWMinCodeSize - 1);
 	InitCodeTable(&codeTable, InitialColorTableLength);
 	ColorIndexArrayCount = 0;
 
-	assert(CodeArray[0] == ClearCode);//µÚÒ»¸öcode±ØĞëÊÇClear code
-	assert(CodeInTable(&codeTable, CodeArray[1]) == 1);//µÚ¶ş¸öcode±ØĞëÔÚcode tableÖĞ
-	//½«µÚ¶ş¸öcodeµÄcontent¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+	assert(CodeArray[0] == ClearCode);//ç¬¬ä¸€ä¸ªcodeå¿…é¡»æ˜¯Clear code
+	assert(CodeInTable(&codeTable, CodeArray[1]) == 1);//ç¬¬äºŒä¸ªcodeå¿…é¡»åœ¨code tableä¸­
+	//å°†ç¬¬äºŒä¸ªcodeçš„contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 	code = CodeArray[1];
-	//»ñÈ¡codeµÄContent
+	//è·å–codeçš„Content
 	GetCodeContent(&codeTable, code, &CodeContent, &CodeContentLength);
-	//½«content¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+	//å°†contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 	for (j = 0; j < CodeContentLength; ++j)
 	{
 		(*ppColorIndexArray)[ColorIndexArrayCount] = CodeContent[j];
 		++ColorIndexArrayCount;
 	}
 
-	for (i = 2; i < CodeArrayCount; ++i)//Ìø¹ıµÚÒ»¸öClear CodeºÍµÚ¶ş¸öcode
+	for (i = 2; i < CodeArrayCount; ++i)//è·³è¿‡ç¬¬ä¸€ä¸ªClear Codeå’Œç¬¬äºŒä¸ªcode
 	{
 		unsigned char k = 0;
 		unsigned int newcode = 0;
@@ -219,17 +217,17 @@ cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImg
 		if (code == ClearCode)
 		{
 #ifdef Dump_Processing_Procedure_of_Translating_Code_Sequence
-			printf("Óöµ½Clear Code(#%d)£¬ÖØÖÃcode table\n", code);
+			printf("é‡åˆ°Clear Code(#%d)ï¼Œé‡ç½®code table\n", code);
 #endif
 			ResetCodeTable(&codeTable, InitialColorTableLength);
-			//½«Clear CodeºóµÄÄÇ¸öcodeµÄcontent¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+			//å°†Clear Codeåçš„é‚£ä¸ªcodeçš„contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 			++i;
 			code = CodeArray[i];
-			//Clear CodeºóµÄÄÇ¸öcode±ØĞëÔÚcode tableÖĞ
+			//Clear Codeåçš„é‚£ä¸ªcodeå¿…é¡»åœ¨code tableä¸­
 			assert(CodeInTable(&codeTable, CodeArray[1]) == 1);
-			//»ñÈ¡codeµÄContent
+			//è·å–codeçš„Content
 			GetCodeContent(&codeTable, code, &CodeContent, &CodeContentLength);
-			//½«content¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+			//å°†contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 			for (j = 0; j < CodeContentLength; ++j)
 			{
 				(*ppColorIndexArray)[ColorIndexArrayCount] = CodeContent[j];
@@ -241,62 +239,62 @@ cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImg
 		else if (code == EOICode)
 		{
 #ifdef Dump_Processing_Procedure_of_Translating_Code_Sequence
-			printf("Óöµ½EOI Code(#%d)£¬codeÂë½âÎöÍê³É\n", code);
+			printf("é‡åˆ°EOI Code(#%d)ï¼Œcodeç è§£æå®Œæˆ\n", code);
 #endif
 			break;
 		}
 
-		//ÅĞ¶ÏcodeÊÇ·ñÔÚcode tableÖĞ
-		if (CodeInTable(&codeTable, code) > 0)//ÔÚ
+		//åˆ¤æ–­codeæ˜¯å¦åœ¨code tableä¸­
+		if (CodeInTable(&codeTable, code) > 0)//åœ¨
 		{
-			//»ñÈ¡codeµÄContent
+			//è·å–codeçš„Content
 			GetCodeContent(&codeTable, code, &CodeContent, &CodeContentLength);
-			//½«content¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+			//å°†contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 			for (j = 0; j < CodeContentLength; ++j)
 			{
 				(*ppColorIndexArray)[ColorIndexArrayCount] = CodeContent[j];
 				++ColorIndexArrayCount;
 			}
-			//Éú³ÉĞÂcode
-			k = CodeContent[0];	//codeµÄContentµÄµÚÒ»¸öÑÕÉ«Ë÷ÒıÖµ
-			//»ñÈ¡ÉÏÒ»¸öcodeµÄContent
+			//ç”Ÿæˆæ–°code
+			k = CodeContent[0];	//codeçš„Contentçš„ç¬¬ä¸€ä¸ªé¢œè‰²ç´¢å¼•å€¼
+			//è·å–ä¸Šä¸€ä¸ªcodeçš„Content
 			GetCodeContent(&codeTable, CodeArray[i - 1], &CodeContent, &CodeContentLength);
 			newcodeContentLength = CodeContentLength + 1;
 			assert(newcodeContentLength <= MAX_CODE_CONTENT_LENGHTH);
 			memcpy(newcodeContent, CodeContent, CodeContentLength*sizeof(CodeContent[0]));
-			newcodeContent[newcodeContentLength - 1] = k;//¸½¼ÓÔÚºóÃæ
+			newcodeContent[newcodeContentLength - 1] = k;//é™„åŠ åœ¨åé¢
 		}
-		else//²»ÔÚ
+		else//ä¸åœ¨
 		{
-			//»ñÈ¡ÉÏÒ»¸öcodeµÄContent
+			//è·å–ä¸Šä¸€ä¸ªcodeçš„Content
 			GetCodeContent(&codeTable, CodeArray[i - 1], &CodeContent, &CodeContentLength);
-			//Éú³ÉĞÂcode
+			//ç”Ÿæˆæ–°code
 			k = CodeContent[0];
 			newcodeContentLength = CodeContentLength + 1;
 			assert(newcodeContentLength <= MAX_CODE_CONTENT_LENGHTH);
 			memcpy(newcodeContent, CodeContent, CodeContentLength*sizeof(CodeContent[0]));
-			newcodeContent[newcodeContentLength - 1] = k;//¸½¼ÓÔÚºóÃæ
-			//½«content¸½¼Óµ½ÑÕÉ«Ë÷ÒıĞòÁĞÖĞ
+			newcodeContent[newcodeContentLength - 1] = k;//é™„åŠ åœ¨åé¢
+			//å°†contenté™„åŠ åˆ°é¢œè‰²ç´¢å¼•åºåˆ—ä¸­
 			for (j = 0; j < newcodeContentLength; ++j)
 			{
 				(*ppColorIndexArray)[ColorIndexArrayCount] = newcodeContent[j];
 				++ColorIndexArrayCount;
 			}
 		}
-		//½«Éú³ÉµÄĞÂcodeÌí¼Óµ½code table
+		//å°†ç”Ÿæˆçš„æ–°codeæ·»åŠ åˆ°code table
 		newcode = AppendCode(&codeTable, newcodeContent, newcodeContentLength);
 #ifdef Dump_Processing_Procedure_of_Translating_Code_Sequence
-		printf("ĞÂÔöcode #%d (", newcode, codeTable.count);
+		printf("æ–°å¢code #%d (", newcode, codeTable.count);
 		for (j = 0; j < newcodeContentLength - 1; ++j)
 		{
 			printf("%d,", newcodeContent[j]);
 		}
 		printf("%d", newcodeContent[j]);
-		printf(")ÏÖÓĞ%d¸öcode\n", codeTable.count);
+		printf(")ç°æœ‰%dä¸ªcode\n", codeTable.count);
 #endif
 	}
 
-	//ÈôĞĞÎª½»´íµÄ£¬Ôò»¹Ô­ĞĞË³Ğò
+	//è‹¥è¡Œä¸ºäº¤é”™çš„ï¼Œåˆ™è¿˜åŸè¡Œé¡ºåº
 	if (pImgDesc->InterlaceFlag)
 	{
 		unsigned char* tmp = (unsigned char*)malloc(pImgDesc->Width*pImgDesc->Height*sizeof(unsigned char));
@@ -338,7 +336,7 @@ cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImg
 		tmp = NULL;
 	}
 
-	//´òÓ¡ÑÕÉ«Ë÷ÒıĞòÁĞ
+	//æ‰“å°é¢œè‰²ç´¢å¼•åºåˆ—
 	assert(ColorIndexArrayCount == pImgDesc->Width*pImgDesc->Height);
 #ifdef Dump_Index_Array
 	printf("--- Index Array ---\n");
@@ -357,7 +355,7 @@ cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray, ImageData* pImg
 	return cGif_Success;
 }
 
-//¶ÔÍ¼ÏñÊı¾İ½øĞĞ½âÑ¹Ëõ
+//å¯¹å›¾åƒæ•°æ®è¿›è¡Œè§£å‹ç¼©
 cGif_Error DecompressImageData(unsigned char** out,
 	ImageData* pImgData, ImageDescriptor* pImgDesc)
 {
@@ -369,17 +367,17 @@ cGif_Error DecompressImageData(unsigned char** out,
 
 #ifdef Do_Benchmark_for_DecompressImageData
 	int begin, end;
-	//1.ºÏ²¢ËùÓĞsub blocks£¬½«Êı¾İ¸´ÖÆµ½µ¥¶ÀµÄÁ¬ĞøµÄÄÚ´æMÖĞ
+	//1.åˆå¹¶æ‰€æœ‰sub blocksï¼Œå°†æ•°æ®å¤åˆ¶åˆ°å•ç‹¬çš„è¿ç»­çš„å†…å­˜Mä¸­
 	begin = GetTickCount();
 	CombineSubBlocks(pImgData, &CodeData, &CodeDataByteSize);
 	end = GetTickCount();
 	printf("CombineSubBlocks: %dms\n", max(0, end - begin));
-	//´ÖÂÔµÄ·ÖÅäĞèÒª¶àÉÙ´óĞ¡µÄÄÚ´æ´æ´¢codeĞòÁĞ£¬
-	//ÕâÀïµÄ¹À¼ÆÊÇÒ»¸öcode±íÊ¾Ò»¸öÑÕÉ«Ë÷ÒıÊ±ËùĞèµÄÄÚ´æ´óĞ¡
+	//ç²—ç•¥çš„åˆ†é…éœ€è¦å¤šå°‘å¤§å°çš„å†…å­˜å­˜å‚¨codeåºåˆ—ï¼Œ
+	//è¿™é‡Œçš„ä¼°è®¡æ˜¯ä¸€ä¸ªcodeè¡¨ç¤ºä¸€ä¸ªé¢œè‰²ç´¢å¼•æ—¶æ‰€éœ€çš„å†…å­˜å¤§å°
 	CodeArray =
 		(unsigned int*)malloc(pImgDesc->Width*pImgDesc->Height*sizeof(unsigned int));
 
-	//2.´ÓÄÚ´æMÖĞ»ñÈ¡codeÊıÁĞ
+	//2.ä»å†…å­˜Mä¸­è·å–codeæ•°åˆ—
 	begin = GetTickCount();
 	ExtractCodeArray(CodeData, CodeDataByteSize, pImgData->LZWMinCodeSize, &CodeArray,
 		&CodeArrayCount);
@@ -387,20 +385,20 @@ cGif_Error DecompressImageData(unsigned char** out,
 	end = GetTickCount();
 	printf("ExtractCodeArray: %dms\n", max(0, end - begin));
 
-	//3.½âÊÍcodeÎªÑÕÉ«Ë÷ÒıÊıÁĞ£¨½âÑ¹Ëõ£©
+	//3.è§£é‡Šcodeä¸ºé¢œè‰²ç´¢å¼•æ•°åˆ—ï¼ˆè§£å‹ç¼©ï¼‰
 	begin = GetTickCount();
 	TranslateCodeArray(out, pImgData, pImgDesc, CodeArray, CodeArrayCount);
 	end = GetTickCount();
 	printf("TranslateCodeArray: %dms\n", max(0, end - begin));
 #else
-	//1.ºÏ²¢ËùÓĞsub blocks£¬½«Êı¾İ¸´ÖÆµ½µ¥¶ÀµÄÁ¬ĞøµÄÄÚ´æMÖĞ
+	//1.åˆå¹¶æ‰€æœ‰sub blocksï¼Œå°†æ•°æ®å¤åˆ¶åˆ°å•ç‹¬çš„è¿ç»­çš„å†…å­˜Mä¸­
 	CombineSubBlocks(pImgData, &CodeData, &CodeDataByteSize);
-	//´ÖÂÔµÄ·ÖÅäĞèÒª¶àÉÙ´óĞ¡µÄÄÚ´æ´æ´¢codeĞòÁĞ£¬
-	//ÕâÀïµÄ¹À¼ÆÊÇÒ»¸öcode±íÊ¾Ò»¸öÑÕÉ«Ë÷ÒıÊ±ËùĞèµÄÄÚ´æ´óĞ¡
+	//ç²—ç•¥çš„åˆ†é…éœ€è¦å¤šå°‘å¤§å°çš„å†…å­˜å­˜å‚¨codeåºåˆ—ï¼Œ
+	//è¿™é‡Œçš„ä¼°è®¡æ˜¯ä¸€ä¸ªcodeè¡¨ç¤ºä¸€ä¸ªé¢œè‰²ç´¢å¼•æ—¶æ‰€éœ€çš„å†…å­˜å¤§å°
 	CodeArray =
 		(unsigned int*)malloc(pImgDesc->Width*pImgDesc->Height*sizeof(unsigned int));
 
-	//2.´ÓÄÚ´æMÖĞ»ñÈ¡codeÊıÁĞ
+	//2.ä»å†…å­˜Mä¸­è·å–codeæ•°åˆ—
 	error = ExtractCodeArray(CodeData, CodeDataByteSize, pImgData->LZWMinCodeSize,
 		&CodeArray, &CodeArrayCount);
 	free(CodeData);
@@ -409,7 +407,7 @@ cGif_Error DecompressImageData(unsigned char** out,
 		return error;
 	}
 
-	//3.½âÊÍcodeÎªÑÕÉ«Ë÷ÒıÊıÁĞ£¨½âÑ¹Ëõ£©
+	//3.è§£é‡Šcodeä¸ºé¢œè‰²ç´¢å¼•æ•°åˆ—ï¼ˆè§£å‹ç¼©ï¼‰
 	error = TranslateCodeArray(out, pImgData, pImgDesc, CodeArray, CodeArrayCount);
 	if (error != cGif_Success)
 	{
@@ -420,7 +418,11 @@ cGif_Error DecompressImageData(unsigned char** out,
 }
 #pragma endregion
 
-#pragma region »ù´¡½á¹¹¶ÁÈ¡º¯Êı¶¨Òå
+#pragma region compression functions | å‹ç¼©ç›¸å…³å‡½æ•°å£°æ˜
+
+#pragma endregion
+
+#pragma region åŸºç¡€ç»“æ„è¯»å–å‡½æ•°å®šä¹‰
 //Read Header
 void ReadHeader(Header* pHeader, FILE* file)
 {
@@ -541,6 +543,7 @@ void ReadPTE(FILE* file)
 	};
 }
 
+//Read image data
 void ReadImageData(ImageData* pImgData, FILE* file)
 {
 	unsigned char byteBuf = 0;
@@ -562,12 +565,12 @@ void ReadImageData(ImageData* pImgData, FILE* file)
 		pImgData->SubBlock[pImgData->SubBlockCount] = (unsigned char*)malloc(byteBuf);
 		fread(pImgData->SubBlock[pImgData->SubBlockCount], sizeof(unsigned char), byteBuf, file);
 		++pImgData->SubBlockCount;
-		if (pImgData->SubBlockCount == 256)//ÒÑ¾­ÓÃÁË256¸öSubBlockÁË£¬»¹²»¹»
+		if (pImgData->SubBlockCount == 256)//å·²ç»ç”¨äº†256ä¸ªSubBlockäº†ï¼Œè¿˜ä¸å¤Ÿ
 		{
 			pImgData->SubBlock = realloc(pImgData->SubBlock, 1024 * sizeof(unsigned char*));
 			pImgData->SubBlockSize = realloc(pImgData->SubBlockSize, 1024 * sizeof(unsigned char));
 		}
-		else if (pImgData->SubBlockCount == 1024)//ÒÑ¾­ÓÃÁË1024¸öSubBlockÁË£¬»¹²»¹»
+		else if (pImgData->SubBlockCount == 1024)//å·²ç»ç”¨äº†1024ä¸ªSubBlockäº†ï¼Œè¿˜ä¸å¤Ÿ
 		{
 			pImgData->SubBlock = realloc(pImgData->SubBlock, 4096 * sizeof(unsigned char*));
 			pImgData->SubBlockSize = realloc(pImgData->SubBlockSize, 4096 * sizeof(unsigned char));
@@ -673,7 +676,117 @@ void SkipCE(FILE* file)
 }
 #pragma endregion
 
-#pragma region »ù´¡½á¹¹´òÓ¡º¯Êı¶¨Òå
+#pragma region basic structure writing function | åŸºç¡€ç»“æ„å†™å…¥å‡½æ•°å®šä¹‰
+//Write Header
+void WriteHeader(Header* pHeader, FILE* file)
+{
+	fwrite(&pHeader->Signature, sizeof(pHeader->Signature), 1, file);//Signature
+	fwrite(&pHeader->Version, sizeof(pHeader->Version), 1, file);//Version
+}
+
+//Write Logical Screen Descriptor
+void WriteLCD(LogicalScreenDescriptor* pLSD, FILE* file)
+{
+	unsigned char byteBuf = 0;
+	fwrite(&pLSD->LogicalScreenWidth, sizeof(pLSD->LogicalScreenWidth), 1, file);
+	fwrite(&pLSD->LogicalScreenHeight, sizeof(pLSD->LogicalScreenHeight), 1, file);
+	byteBuf |= (0x80 & (pLSD->GCTFlag << 7));
+	byteBuf |= (0x70 & (pLSD->ColorResolution << 4));
+	byteBuf |= (0x08 & (pLSD->SortFlag << 3));
+	byteBuf |= (0x07 & pLSD->SizeOfGCT);
+	fwrite(&byteBuf, sizeof(byteBuf), 1, file);
+	fwrite(&pLSD->BackgroundColorIndex, sizeof(pLSD->BackgroundColorIndex), 1, file);
+	fwrite(&pLSD->PixelAspectRatio, sizeof(pLSD->PixelAspectRatio), 1, file);
+}
+
+//Write Glocal Color Table
+void WriteGCT(LogicalScreenDescriptor* pLSD, ColorTable* pGCT, FILE* file)
+{
+	unsigned int i = 0;
+	assert(pGCT->ColorCount == 2 << pLSD->SizeOfGCT);
+	assert(pGCT->vColor != NULL);
+	for (i = 0; i < pGCT->ColorCount; ++i)
+	{
+		Color* pColor = &pGCT->vColor[i];
+		fwrite(&pColor->r, sizeof(pColor->r), 1, file);
+		fwrite(&pColor->g, sizeof(pColor->g), 1, file);
+		fwrite(&pColor->b, sizeof(pColor->b), 1, file);
+	}
+	fflush(file);
+}
+
+//Write Graphics Control Extension
+void WriteGCE(GraphicsControlExtension* pGCE, FILE* file)
+{
+	unsigned char byteBuf = 0;
+
+	assert(0x21 == pGCE->Introducer);
+	assert(0xf9 == pGCE->Label);
+	assert(0x04 == pGCE->BlockSize);
+
+	fwrite(&pGCE->Introducer, sizeof(pGCE->Introducer), 1, file);
+	fwrite(&pGCE->Label, sizeof(pGCE->Label), 1, file);
+	fwrite(&pGCE->BlockSize, sizeof(pGCE->BlockSize), 1, file);
+	byteBuf |= (0x70 & (pGCE->Reserved << 5));
+	byteBuf |= (0x1c & (pGCE->DisposalMethod << 2));
+	byteBuf |= (0x02 & (pGCE->UserInputFlag << 1));
+	byteBuf |= (0x01 & pGCE->TransparentColorFlag);
+	fwrite(&byteBuf, sizeof(byteBuf), 1, file);
+	fwrite(&pGCE->DelayTime, sizeof(pGCE->DelayTime), 1, file);
+	fwrite(&pGCE->TransparentColorIndex, sizeof(pGCE->TransparentColorIndex), 1, file);
+	fwrite(&pGCE->BlockTerminator, sizeof(pGCE->BlockTerminator), 1, file);
+}
+
+//Write Image Descriptor
+void WriteImageDesc(ImageDescriptor* pImgDesc, FILE* file)
+{
+	unsigned char byteBuf = 0;
+
+	assert(0x2c == pImgDesc->Separator);
+
+	fwrite(&pImgDesc->Separator, sizeof(pImgDesc->Separator), 1, file);
+	fwrite(&pImgDesc->LeftPosition, sizeof(pImgDesc->LeftPosition), 1, file);
+	fwrite(&pImgDesc->TopPosition, sizeof(pImgDesc->TopPosition), 1, file);
+	fwrite(&pImgDesc->Width, sizeof(pImgDesc->Width), 1, file);
+	fwrite(&pImgDesc->Height, sizeof(pImgDesc->Height), 1, file);
+	byteBuf |= (0x80 & (pImgDesc->LocalColorTableFlag << 7));
+	byteBuf |= (0x40 & (pImgDesc->InterlaceFlag << 6));
+	byteBuf |= (0x20 & (pImgDesc->SortFlag << 5));
+	byteBuf |= (0x18 & (pImgDesc->SortFlag << 3));
+	byteBuf |= (0x07 & pImgDesc->SizeOfLocalColorTable);
+	fwrite(&byteBuf, sizeof(byteBuf), 1, file);
+}
+
+//Write Local Color Table
+void WriteLCT(ImageDescriptor* pImgDesc, ColorTable* pLCT, FILE* file)
+{
+	unsigned int i = 0;
+
+	assert(pLCT->ColorCount == 2 << pImgDesc->SizeOfLocalColorTable);
+	assert(pLCT->vColor != NULL);
+	for (i = 0U; i < pLCT->ColorCount; ++i)
+	{
+		Color* pColor = &pLCT->vColor[i];
+		fwrite(&pColor->r, sizeof(pColor->r), 1, file);
+		fwrite(&pColor->g, sizeof(pColor->g), 1, file);
+		fwrite(&pColor->b, sizeof(pColor->b), 1, file);
+	}
+	fflush(file);
+}
+
+//Write Plain Text Extension not provided, because it is useless
+
+//Write image data
+void WriteImageData(ImageData* pImgData, FILE* file){}
+
+//Write Graphic Rendering Block
+void WriteGRB(ImageData* pImgData, cGif_State_Frame* state, FILE* file){}
+
+//Write Application Extension
+void WriteAE(ApplicationExtension* pAppExt, FILE* file){}
+#pragma endregion
+
+#pragma region åŸºç¡€ç»“æ„æ‰“å°å‡½æ•°å®šä¹‰
 void HeaderToString(Header* pHeader, char* buffer)
 {
 	char signatureBuf[4] = {0};
@@ -856,10 +969,11 @@ void LCTToString(const ColorTable* LCT, char* stringBuffer )
 }
 #pragma endregion
 
+
 #pragma endregion
 
-#pragma region Code tableÏà¹Øº¯Êı¶¨Òå
-//Code²Ù×÷º¯Êı
+#pragma region Code tableç›¸å…³å‡½æ•°å®šä¹‰
+//Codeæ“ä½œå‡½æ•°
 void InitCodeTable( CodeTable* pCodeTable, unsigned short colorTableLength )
 {
     unsigned int i=0;
@@ -868,7 +982,7 @@ void InitCodeTable( CodeTable* pCodeTable, unsigned short colorTableLength )
 	pCodeTable->content = malloc(4098 * sizeof(unsigned char*));
 	pCodeTable->length = malloc(4098 * sizeof(unsigned));
 	pTmp = malloc((colorTableLength + 2)*sizeof(unsigned char));
-    //Éú³ÉColor code
+    //ç”ŸæˆColor code
     /*
      *Color codes:
      *#0, #1, ..., #(2^i-1), ..., #(2^mincodeSize-1)
@@ -878,23 +992,23 @@ void InitCodeTable( CodeTable* pCodeTable, unsigned short colorTableLength )
         pCodeTable->content[i] = pTmp + i;
         *pCodeTable->content[i] = i;
         pCodeTable->length[i] = 1;
-        //Color codeµÄcontentºÍÆävalueÏàÍ¬£¬Ö»ÓĞÒ»¸öÊı×Ö£¬ËùÒÔ³¤¶ÈÎª1
-        //ÈçColor code (code #3, content 3, length 1)
+        //Color codeçš„contentå’Œå…¶valueç›¸åŒï¼Œåªæœ‰ä¸€ä¸ªæ•°å­—ï¼Œæ‰€ä»¥é•¿åº¦ä¸º1
+        //å¦‚Color code (code #3, content 3, length 1)
     }
-    //Éú³ÉClear code
+    //ç”ŸæˆClear code
 	pCodeTable->content[colorTableLength] = pTmp + colorTableLength;
-    *pCodeTable->content[colorTableLength] = 0;//Clear codeµÄÄÚÈİÎŞ×÷ÓÃ
+    *pCodeTable->content[colorTableLength] = 0;//Clear codeçš„å†…å®¹æ— ä½œç”¨
     pCodeTable->length[colorTableLength] = 1;
-    //Éú³ÉEOI code
+    //ç”ŸæˆEOI code
 	pCodeTable->content[colorTableLength + 1] = pTmp + colorTableLength + 1;
-    *pCodeTable->content[colorTableLength+1] = 0;//EOI codeµÄÄÚÈİÎŞ×÷ÓÃ
+    *pCodeTable->content[colorTableLength+1] = 0;//EOI codeçš„å†…å®¹æ— ä½œç”¨
     pCodeTable->length[colorTableLength+1] = 1;
 
     pCodeTable->count = colorTableLength+2;
 
-	//ÎªCodeTableµÄ·Çcolor codeÒ²·ÇClear codeÒ²·ÇEOI codeµÄcodeµÄContentÔ¤·ÖÅä¿Õ¼ä
-	//¼ÙÉè£ºÃ¿¸öcodeµÄContentµÄ³¤¶ÈÎª512(MAX_CODE_CONTENT_LENGHTH)
-	//TODO: È¥³ıÕâ¸ö¼ÙÉè£¡·ñÔòÈç¹ûÓĞcodeµÄµÄContentµÄ³¤¶È³¬¹ı512Ê±£¬½âÎö³ö´í
+	//ä¸ºCodeTableçš„écolor codeä¹ŸéClear codeä¹ŸéEOI codeçš„codeçš„Contenté¢„åˆ†é…ç©ºé—´
+	//å‡è®¾ï¼šæ¯ä¸ªcodeçš„Contentçš„é•¿åº¦ä¸º512(MAX_CODE_CONTENT_LENGHTH)
+	//TODO: å»é™¤è¿™ä¸ªå‡è®¾ï¼å¦åˆ™å¦‚æœæœ‰codeçš„çš„Contentçš„é•¿åº¦è¶…è¿‡512æ—¶ï¼Œè§£æå‡ºé”™
 	{
 		unsigned char* pTmp = malloc(MAX_CODE_CONTENT_LENGHTH * (4098 - (colorTableLength + 2))*sizeof(unsigned char));
 		for (i = colorTableLength + 2; i < 4098; i++)
@@ -902,18 +1016,18 @@ void InitCodeTable( CodeTable* pCodeTable, unsigned short colorTableLength )
 			pCodeTable->content[i] = pTmp + (i - (colorTableLength + 2)) * MAX_CODE_CONTENT_LENGHTH;
 		}
 		//pTmp == pCodeTable->content[colorTableLength + 2]
-		//ÊÍ·ÅÊ±
-		//free(pCodeTable->content[colorTableLength + 2]);¼´¿É
+		//é‡Šæ”¾æ—¶
+		//free(pCodeTable->content[colorTableLength + 2]);å³å¯
 	}
 }
 
-//ÖØÖÃcode tableÎª³õÊ¼×´Ì¬
+//é‡ç½®code tableä¸ºåˆå§‹çŠ¶æ€
 void ResetCodeTable( CodeTable* pCodeTable, unsigned short colorTableLength )
 {
 	pCodeTable->count = colorTableLength+2;
 }
 
-//ÊÍ·ÅCodeTable·ÖÅäµÄÄÚ´æ
+//é‡Šæ”¾CodeTableåˆ†é…çš„å†…å­˜
 void FreeCodeTable(CodeTable* pCodeTable, unsigned int colorTableLength)
 {
 	unsigned int i = 0;
@@ -931,7 +1045,7 @@ void FreeCodeTable(CodeTable* pCodeTable, unsigned int colorTableLength)
 	pCodeTable->length = NULL;
 }
 
-//Ïòcode tableÌí¼Ócode£¬·µ»ØÌí¼ÓµÄcodeÖµ
+//å‘code tableæ·»åŠ codeï¼Œè¿”å›æ·»åŠ çš„codeå€¼
 unsigned int AppendCode( CodeTable* pCodeTable,
     const unsigned char* content, const int length )
 {
@@ -948,8 +1062,8 @@ unsigned int AppendCode( CodeTable* pCodeTable,
 
 int CodeInTable(CodeTable* pCodeTable, unsigned int code)
 {
-	//code´Ó0¿ªÊ¼¼ÆÊı
-	//CodeTable::count¼ÇÂ¼µÄÊÇcode×ÜÊı£¬CodeTableÖĞ×îºóÒ»¸öcodeµÄÖµ¾ÍÊÇCodeTable::count-1
+	//codeä»0å¼€å§‹è®¡æ•°
+	//CodeTable::countè®°å½•çš„æ˜¯codeæ€»æ•°ï¼ŒCodeTableä¸­æœ€åä¸€ä¸ªcodeçš„å€¼å°±æ˜¯CodeTable::count-1
 	if (code>=pCodeTable->count)
 	{
 		return -1;
@@ -971,7 +1085,7 @@ void CodeTableToString( const CodeTable* pCodeTable, char* stringBuffer )
 {
     unsigned int i=0,j=0;
 
-    sprintf(stringBuffer, "Code tableº¬%d¸öcode:\n", pCodeTable->count);
+    sprintf(stringBuffer, "Code tableå«%dä¸ªcode:\n", pCodeTable->count);
     for (i=0; i<pCodeTable->count; ++i)
     {
         sprintf(stringBuffer+strlen(stringBuffer),
@@ -995,52 +1109,53 @@ unsigned int GetCode( unsigned char* CodeData, unsigned int bitOffset, unsigned 
     unsigned char bitPartLength[3] = {0};
     unsigned int code = 0;
 
-    //¼ì²âcodeµÄ·¶Î§ÊÇ·ñ³¬¹ıoffsetËùÔÚ×Ö½ÚµÄÏÂ1×Ö½ÚµÄ·¶Î§
+    //æ£€æµ‹codeçš„èŒƒå›´æ˜¯å¦è¶…è¿‡offsetæ‰€åœ¨å­—èŠ‚çš„ä¸‹1å­—èŠ‚çš„èŒƒå›´
     if (16-offset < codeLength)
 	{
-        //ÒªÔÚoffsetËùÔÚ×Ö½Ú»ñÈ¡µÄbit·¶Î§Îª
+        //è¦åœ¨offsetæ‰€åœ¨å­—èŠ‚è·å–çš„bitèŒƒå›´ä¸º
         //[offset, 7]
         bitPart[0] = GetBitRangeFromByte(*current, offset, 7);
-        //»ñÈ¡µÄbit³¤¶ÈÎª7-offset+1
+        //è·å–çš„bité•¿åº¦ä¸º7-offset+1
         bitPartLength[0] = 8 - offset;
-        //ÒªÔÚoffsetËùÔÚ×Ö½ÚµÄÏÂÒ»¸ö×Ö½Ú»ñÈ¡µÄbit·¶Î§Îª
-        //[0,7](ËùÓĞÎ»)
+        //è¦åœ¨offsetæ‰€åœ¨å­—èŠ‚çš„ä¸‹ä¸€ä¸ªå­—èŠ‚è·å–çš„bitèŒƒå›´ä¸º
+        //[0,7](æ‰€æœ‰ä½)
         bitPart[1] = *(current+1);
-        //»ñÈ¡µÄbit³¤¶ÈÎª8
+        //è·å–çš„bité•¿åº¦ä¸º8
         bitPartLength[1] = 8;
-        //ÒªÔÚoffsetËùÔÚ×Ö½ÚµÄÏÂµÚ¶ş¸ö×Ö½Ú»ñÈ¡µÄbit·¶Î§Îª
+        //è¦åœ¨offsetæ‰€åœ¨å­—èŠ‚çš„ä¸‹ç¬¬äºŒä¸ªå­—èŠ‚è·å–çš„bitèŒƒå›´ä¸º
         //[0,codeLength-8-(8-offset)-1]
-        //¼´
+        //å³
         //[0,codeLength+offset-17]
-        //»ñÈ¡µÄbit³¤¶ÈÎªcodeLength+offset-17 + 1
+        //è·å–çš„bité•¿åº¦ä¸ºcodeLength+offset-17 + 1
         bitPart[2] = GetBitRangeFromByte(*(current+2), 0, codeLength+offset-17);
         bitPartLength[2] = codeLength+offset-16;
-        //ºÏ²¢ËùÓĞbit¶Î
+        //åˆå¹¶æ‰€æœ‰bitæ®µ
         code = CombineByte(bitPart[0], bitPartLength[0], bitPart[1], bitPartLength[1]);
         code = CombineByte(code, bitPartLength[0] + bitPartLength[1], bitPart[2], bitPartLength[2]);
     }
-    //¼ì²âcodeµÄ·¶Î§ÊÇ·ñ³¬¹ıoffsetËùÔÚ×Ö½ÚµÄ·¶Î§
+    //æ£€æµ‹codeçš„èŒƒå›´æ˜¯å¦è¶…è¿‡offsetæ‰€åœ¨å­—èŠ‚çš„èŒƒå›´
     else if (8-offset < codeLength)
     {
-        //ÒªÔÚoffsetËùÔÚ×Ö½Ú»ñÈ¡µÄbit·¶Î§Îª
+        //è¦åœ¨offsetæ‰€åœ¨å­—èŠ‚è·å–çš„bitèŒƒå›´ä¸º
         //[offset, 7]
         bitPart[0] = GetBitRangeFromByte(*current, offset, 7);
-        //»ñÈ¡µÄbit³¤¶ÈÎª7-offset+1
+        //è·å–çš„bité•¿åº¦ä¸º7-offset+1
         bitPartLength[0] = 8 - offset;
-        //ÒªÔÚoffsetËùÔÚ×Ö½ÚµÄÏÂÒ»¸ö×Ö½Ú»ñÈ¡µÄbit·¶Î§Îª
+        //è¦åœ¨offsetæ‰€åœ¨å­—èŠ‚çš„ä¸‹ä¸€ä¸ªå­—èŠ‚è·å–çš„bitèŒƒå›´ä¸º
         //[0,codeLength-(8-offset)-1]
-        //¼´
+        //å³
         //[0,codeLength+offset-9]
         bitPart[1] = GetBitRangeFromByte(*(current+1), 0, codeLength+offset-9);
-        //»ñÈ¡µÄbit³¤¶ÈÎªcodeLength+offset-9+1
+        //è·å–çš„bité•¿åº¦ä¸ºcodeLength+offset-9+1
         bitPartLength[1] = codeLength+offset-9+1;
         code = CombineByte(bitPart[0], bitPartLength[0], bitPart[1], bitPartLength[1]);
     }
-    else//codeµÄ·¶Î§²»³¬¹ıoffsetËùÔÚ×Ö½ÚµÄ·¶Î§
+    else//codeçš„èŒƒå›´ä¸è¶…è¿‡offsetæ‰€åœ¨å­—èŠ‚çš„èŒƒå›´
     {
-        //»ñÈ¡[offset,offset+codeLength-1]µÄbit£¬¼´Îªcode
+        //è·å–[offset,offset+codeLength-1]çš„bitï¼Œå³ä¸ºcode
         code = GetBitRangeFromByte(*current, offset, offset+codeLength-1);
     }
     return code;
 }
+
 #pragma endregion

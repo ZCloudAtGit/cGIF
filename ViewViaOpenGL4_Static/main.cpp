@@ -3,7 +3,7 @@
 Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
-This code is licensed under the GPL license. See Licence.
+This code is licensed under the Apache 2.0 license. See Licence.
 */
 
 #include <windows.h>
@@ -25,7 +25,7 @@ extern "C"
 
 #define APP_TITLE "GIF Viewer via OpenGL 4 (Static)"
 
-//ÓÃÓÚÑÕÉ«±í£¨RGBË³Ğò£¬×¢£ºGDIµÄRGBTRIPLEÎªBGRË³Ğò£©
+//ç”¨äºé¢œè‰²è¡¨ï¼ˆRGBé¡ºåºï¼Œæ³¨ï¼šGDIçš„RGBTRIPLEä¸ºBGRé¡ºåºï¼‰
 typedef struct _tagRGBTriple
 {
 	BYTE r;
@@ -39,8 +39,8 @@ static char szWindowClass[] = "ViewViaOpenGL4_StaticWindowClass";
 static char szTitle[] = APP_TITLE;
 HDC hdc = 0;
 
-//GIFÏà¹ØÊı¾İ
-//cGIF²ÎÊı
+//GIFç›¸å…³æ•°æ®
+//cGIFå‚æ•°
 unsigned char* pColorIndexArray = NULL;
 unsigned int canvasWidth = 0, canvasHeight = 0;
 unsigned int image_position_x = 0, image_position_y = 0;
@@ -53,7 +53,7 @@ unsigned char transparent_color_index;
 char flag = 0;
 int disposalMethod = 0;
 
-//OpenGLÏà¹ØÊı¾İ
+//OpenGLç›¸å…³æ•°æ®
 HGLRC hglrc = 0;
 char titleWithOpenGLInfo[512] = { 0 };
 //texture
@@ -109,7 +109,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!RegisterClassExA(&wcex))
 	{
-		MessageBox(NULL, _T("RegisterClassExÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("RegisterClassExå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
@@ -127,13 +127,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!hWnd)
 	{
-		MessageBox(NULL, _T("CreateWindowÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("CreateWindowå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
-	hdc = GetDC(hWnd);//±£´æDCµ½È«¾Ö±äÁ¿ÖĞ
+	hdc = GetDC(hWnd);//ä¿å­˜DCåˆ°å…¨å±€å˜é‡ä¸­
 
-	//¶ÁÈ¡GIFÍ¼Ïñ£¬È¡µÃÍ¼ÏñÊı¾İ
+	//è¯»å–GIFå›¾åƒï¼Œå–å¾—å›¾åƒæ•°æ®
 	cGif_Error error = cGif_decode_static_indexed(
 		lpCmdLine,
 		&pColorIndexArray,
@@ -147,7 +147,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (error != cGif_Error::cGif_Success)
 	{
 		char buffer[128];
-		sprintf(buffer, "½âÎöGIFÍ¼ÏñÊ§°Ü£¡´íÎó£º%s", cGif_error_text(error));
+		sprintf(buffer, "è§£æGIFå›¾åƒå¤±è´¥ï¼é”™è¯¯ï¼š%s", cGif_error_text(error));
 		MessageBoxA(NULL, buffer, APP_TITLE, NULL);
 		return 1;
 	}
@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	BOOL IsLoaded = FALSE;
 	while (msg.message!=WM_QUIT)
 	{
-		//´¦ÀíWindowsÏûÏ¢
+		//å¤„ç†Windowsæ¶ˆæ¯
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -169,26 +169,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		else
 		{
 			assert(hglrc != NULL);
-			if (IsLoaded == FALSE)//ÅĞ¶ÏÊÇ·ñÒÑ¼ÓÔØÍ¼ÏñÊı¾İ
+			if (IsLoaded == FALSE)//åˆ¤æ–­æ˜¯å¦å·²åŠ è½½å›¾åƒæ•°æ®
 			{
 				RECT rc;
 				::GetClientRect(hWnd, &rc);
 				int rc_width = rc.right - rc.left;
 				int rc_height = rc.bottom - rc.top;
-				//ÉèÖÃOpenGLµÄÒ»Ğ©×´Ì¬
+				//è®¾ç½®OpenGLçš„ä¸€äº›çŠ¶æ€
 				//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				glEnable(GL_TEXTURE_1D);
 				glEnable(GL_TEXTURE_2D);
 				glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 				glViewport(0.5*(rc_width - imageWidth), 0.5*(rc_width - imageHeight), imageWidth, imageHeight);
 				LoadQuad(imageWidth, imageHeight);
-				//½«Í¼ÏñÊı¾İ´«ËÍµ½OpenGLÒıÇæ
+				//å°†å›¾åƒæ•°æ®ä¼ é€åˆ°OpenGLå¼•æ“
 				LoadTexture();
-				//³õÊ¼»¯shader
+				//åˆå§‹åŒ–shader
 				InitShader();
 				IsLoaded = TRUE;
 			}
-			else//ÒÑ¼ÓÔØÍ¼ÏñÊı¾İ£¬ÓÃOpenGLäÖÈ¾Í¼Ïñ
+			else//å·²åŠ è½½å›¾åƒæ•°æ®ï¼Œç”¨OpenGLæ¸²æŸ“å›¾åƒ
 			{
 				DrawPicture();
 			}
@@ -241,7 +241,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		err = glewInit();
 		if (err != GLEW_NO_ERROR)
 		{
-			sprintf_s(errbuf, "glewInit Ê§°Ü Error: %s\n", glewGetErrorString(err));
+			sprintf_s(errbuf, "glewInit å¤±è´¥ Error: %s\n", glewGetErrorString(err));
 			OutputDebugStringA(errbuf);
 			exit(1);
 		}
@@ -261,7 +261,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void LoadTexture()
 {
-	//´´½¨ÑÕÉ«±í1D Texture
+	//åˆ›å»ºé¢œè‰²è¡¨1D Texture
 	{
 		glGenTextures(1, &ct);
 		checkOGLError;
@@ -283,7 +283,7 @@ void LoadTexture()
 
 	}
 
-	//´´½¨Í¼ÏñË÷Òı2D Texture
+	//åˆ›å»ºå›¾åƒç´¢å¼•2D Texture
 	{
 		glGenTextures(1, &tex);
 		checkOGLError;
@@ -456,7 +456,7 @@ void DrawPicture()
 	checkOGLError;
 	if (ctLocation == -1)
 	{
-		OutputDebugStringA("Error: semantic <colorTable>²»´æÔÚ£¡\n");
+		OutputDebugStringA("Error: semantic <colorTable>ä¸å­˜åœ¨ï¼\n");
 		exit(1);
 	}
 
@@ -474,7 +474,7 @@ void DrawPicture()
 	checkOGLError;
 	if (pictureLocation == -1)
 	{
-		OutputDebugStringA("Error: semantic <picture>²»´æÔÚ£¡\n");
+		OutputDebugStringA("Error: semantic <picture>ä¸å­˜åœ¨ï¼\n");
 		exit(1);
 	}
 
@@ -484,7 +484,7 @@ void DrawPicture()
 	checkOGLError;
 	if (transparentColorIndexLocation == -1)
 	{
-		OutputDebugStringA("Error: semantic <transparent_color_index>²»´æÔÚ£¡\n");
+		OutputDebugStringA("Error: semantic <transparent_color_index>ä¸å­˜åœ¨ï¼\n");
 		exit(1);
 	}
 

@@ -3,7 +3,7 @@
 Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
-This code is licensed under the GPL license. See Licence.
+This code is licensed under the Apache 2.0 license. See Licence.
 */
 
 #include "vld.h"
@@ -21,7 +21,7 @@ extern "C"
 
 #define APP_TITLE "GIF Viewer via GDI (Static)"
 
-//ÓÃÓÚÑÕÉ«±í£¨RGBË³Ğò£¬×¢£ºGDIµÄRGBTRIPLEÎªBGRË³Ğò£©
+//ç”¨äºé¢œè‰²è¡¨ï¼ˆRGBé¡ºåºï¼Œæ³¨ï¼šGDIçš„RGBTRIPLEä¸ºBGRé¡ºåºï¼‰
 typedef struct _tagRGBTriple
 {
 	BYTE r;
@@ -36,9 +36,9 @@ static TCHAR szWindowClass[] = _T("ViewViaGDI_StaticWindowClass");
 // The string that appears in the application's title bar.
 static TCHAR szTitle[] = _T(APP_TITLE);
 
-//»æÍ¼Ïà¹Ø±äÁ¿
-HPALETTE hpal = 0;//µ÷É«°å¾ä±ú
-HBITMAP bitmap = 0;//Í¼Ïó¾ä±ú
+//ç»˜å›¾ç›¸å…³å˜é‡
+HPALETTE hpal = 0;//è°ƒè‰²æ¿å¥æŸ„
+HBITMAP bitmap = 0;//å›¾è±¡å¥æŸ„
 HDC hdcsource = 0;
 BITMAPINFO* bmi = nullptr;
 RECT canvasRect = { 0 };
@@ -46,7 +46,7 @@ UINT backgroundColor;
 UINT transparentColor;
 HBRUSH backgroundBrush = nullptr;
 
-//cGIF²ÎÊı
+//cGIFå‚æ•°
 unsigned int canvasWidth = 0, canvasHeight = 0;
 unsigned int image_position_x = 0, image_position_y = 0;
 unsigned int imageWidth = 0;
@@ -79,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!RegisterClassEx(&wcex))
 	{
-		MessageBox(NULL, _T("RegisterClassExÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("RegisterClassExå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
@@ -96,7 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		);
 	if (!hWnd)
 	{
-		MessageBox(NULL, _T("CreateWindowÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("CreateWindowå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
@@ -114,7 +114,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (error != cGif_Error::cGif_Success)
 	{
 		char buffer[128];
-		sprintf(buffer, "½âÎöGIFÍ¼ÏñÊ§°Ü£¡´íÎó£º%s", cGif_error_text(error));
+		sprintf(buffer, "è§£æGIFå›¾åƒå¤±è´¥ï¼é”™è¯¯ï¼š%s", cGif_error_text(error));
 		MessageBoxA(NULL, buffer, APP_TITLE, NULL);
 		return 1;
 	}
@@ -123,8 +123,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	canvasRect.right = canvasRect.left + canvasWidth;
 	canvasRect.bottom = canvasRect.top + canvasHeight;
 	
-	//´¦ÀíË÷ÒıÊı×é
-	//Ò»ĞĞÍ¼ÏñÊı¾İµÄ´óĞ¡±ØĞëÊÇ4×Ö½ÚµÄ±¶Êı£¬²»×ãµÄÒªÓÃ0²¹Æë
+	//å¤„ç†ç´¢å¼•æ•°ç»„
+	//ä¸€è¡Œå›¾åƒæ•°æ®çš„å¤§å°å¿…é¡»æ˜¯4å­—èŠ‚çš„å€æ•°ï¼Œä¸è¶³çš„è¦ç”¨0è¡¥é½
 	int lineByteSize =
 		(imageWidth%4 == 0) ? imageWidth : (imageWidth + (4 - imageWidth % 4));
 	unsigned char* vColorIndex = (unsigned char*)malloc(imageHeight*lineByteSize);
@@ -136,10 +136,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			*(vColorIndex + lineByteSize*i + j) = *(pColorIndexArray + imageWidth*i + j);
 		}
 	}
-	//The color index data have been copied, so release it. | ÑÕÉ«±íÊı¾İÒÑ¾­¸´ÖÆ¹ıÁË£¬ÏÖÔÚÃ»ÓÃÁË£¬ÊÍ·ÅËü
+	//The color index data have been copied, so release it. | é¢œè‰²è¡¨æ•°æ®å·²ç»å¤åˆ¶è¿‡äº†ï¼Œç°åœ¨æ²¡ç”¨äº†ï¼Œé‡Šæ”¾å®ƒ
 	free(pColorIndexArray);
 
-	//´¦Àí±³¾°É«
+	//å¤„ç†èƒŒæ™¯è‰²
 	if (flag & 0x01)
 	{
 		backgroundColor = RGB(palette[background_color_index].r,
@@ -150,22 +150,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		backgroundColor = RGB(0xff,0xff,0xff);//Default background color is white
 	}
 
-	//´¦ÀíÍ¸Ã÷É«
+	//å¤„ç†é€æ˜è‰²
 	if (flag & 0x02)
 	{
 		UINT transparentColorOrginal = RGB(palette[transparent_color_index].r,
 			palette[transparent_color_index].g, palette[transparent_color_index].b);
 		/*
-		×¢Òâ£º
-		GIFµÄÑÕÉ«±íÖĞ£¬Í¸Ã÷É«¿ÉÄÜ±»ÉèÖÃÎªÒÑÓĞµÄÆÕÍ¨ÑÕÉ«£¬±ÈÈçÑÕÉ«±íÖĞµÚ3¸öÑÕÉ«ÊÇºÚÉ«£¬µÚ178¸öÑÕÉ«Ò²ÊÇºÚÉ«£¬
-		µ«ÊÇ178±»ÉèÖÃÎªÁËÍ¸Ã÷É«µÄË÷Òı¡£BMPÎŞ·¨°´ÕÕË÷ÒıµÄ·½Ê½ÊµÏÖÍ¸Ã÷É«£¬ËùÒÔĞèÒªÌæ»»µÚ178¸öÑÕÉ«ÎªÑÕÉ«±í
-		ÖĞÃ»ÓĞ³öÏÖ¹ıµÄÑÕÉ«£¬È»ºóÔÚTransparentBltÖĞÖ¸¶¨¸ÃÑÕÉ«ÎªÍ¸Ã÷É«£¬½øĞĞäÖÈ¾¡£
-		×¢Òâ£ºäÖÈ¾¶¯Ì¬Í¼ÏñÊ±£¬²»ÄÜÕâÃ´×ö£¬ÒòÎªÖ®Ç°µÄÖ¡Ëù×öµÄ¸Ä±ä»áÓ°ÏìºóÃæµÄÖ¡£¡
+		æ³¨æ„ï¼š
+		GIFçš„é¢œè‰²è¡¨ä¸­ï¼Œé€æ˜è‰²å¯èƒ½è¢«è®¾ç½®ä¸ºå·²æœ‰çš„æ™®é€šé¢œè‰²ï¼Œæ¯”å¦‚é¢œè‰²è¡¨ä¸­ç¬¬3ä¸ªé¢œè‰²æ˜¯é»‘è‰²ï¼Œç¬¬178ä¸ªé¢œè‰²ä¹Ÿæ˜¯é»‘è‰²ï¼Œ
+		ä½†æ˜¯178è¢«è®¾ç½®ä¸ºäº†é€æ˜è‰²çš„ç´¢å¼•ã€‚BMPæ— æ³•æŒ‰ç…§ç´¢å¼•çš„æ–¹å¼å®ç°é€æ˜è‰²ï¼Œæ‰€ä»¥éœ€è¦æ›¿æ¢ç¬¬178ä¸ªé¢œè‰²ä¸ºé¢œè‰²è¡¨
+		ä¸­æ²¡æœ‰å‡ºç°è¿‡çš„é¢œè‰²ï¼Œç„¶ååœ¨TransparentBltä¸­æŒ‡å®šè¯¥é¢œè‰²ä¸ºé€æ˜è‰²ï¼Œè¿›è¡Œæ¸²æŸ“ã€‚
+		æ³¨æ„ï¼šæ¸²æŸ“åŠ¨æ€å›¾åƒæ—¶ï¼Œä¸èƒ½è¿™ä¹ˆåšï¼Œå› ä¸ºä¹‹å‰çš„å¸§æ‰€åšçš„æ”¹å˜ä¼šå½±å“åé¢çš„å¸§ï¼
 		*/
 		RGBTriple& transparentColorTmp = palette[transparent_color_index];
 		{
 			bool bTransparentColorAlreadyUsed = false;
-			//±éÀúGIFÑÕÉ«±í£¬ÅĞ¶ÏÍ¸Ã÷É«ÊÇ·ñÊÇÒÑÓĞµÄÆÕÍ¨ÑÕÉ«
+			//éå†GIFé¢œè‰²è¡¨ï¼Œåˆ¤æ–­é€æ˜è‰²æ˜¯å¦æ˜¯å·²æœ‰çš„æ™®é€šé¢œè‰²
 			for (int i = 0; i <= palette_color_count; ++i)
 			{
 				if (transparentColorTmp.r == palette[i].r
@@ -176,11 +176,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					break;
 				}
 			}
-			//È·¶¨Í¸Ã÷É«ÊÇÒÑÓĞµÄÆÕÍ¨ÑÕÉ«µÄ»°£¬ÕÒÒ»¸öÑÕÉ«±íÖĞÃ»ÓĞµÄÑÕÉ«Ìæ´úËü
+			//ç¡®å®šé€æ˜è‰²æ˜¯å·²æœ‰çš„æ™®é€šé¢œè‰²çš„è¯ï¼Œæ‰¾ä¸€ä¸ªé¢œè‰²è¡¨ä¸­æ²¡æœ‰çš„é¢œè‰²æ›¿ä»£å®ƒ
 			if (bTransparentColorAlreadyUsed == true)
 			{
-				//ÕâÀïÓÃËæ»úÑÕÉ«£¬ÒòÎª256É«ÔÚ0xffffffÉ«ÖĞ»¹ÊÇºÜÉÙµÄ
-				srand((int)palette);//Ëæ±ãÕÒ¸öRuntimeÖµµ±ÖÖ×Ó£¬ÃâµÃÓÃtime()»¹µÃ¼Ó¿â
+				//è¿™é‡Œç”¨éšæœºé¢œè‰²ï¼Œå› ä¸º256è‰²åœ¨0xffffffè‰²ä¸­è¿˜æ˜¯å¾ˆå°‘çš„
+				srand((int)palette);//éšä¾¿æ‰¾ä¸ªRuntimeå€¼å½“ç§å­ï¼Œå…å¾—ç”¨time()è¿˜å¾—åŠ åº“
 				BYTE r, g, b;
 				while (true)
 				{
@@ -201,9 +201,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				transparentColorTmp.r = r;
 				transparentColorTmp.g = g;
 				transparentColorTmp.b = b;
-				//Replace original transparent color | Ìæ»»Ô­À´µÄÍ¸Ã÷É«
+				//Replace original transparent color | æ›¿æ¢åŸæ¥çš„é€æ˜è‰²
 				palette[transparent_color_index] = transparentColorTmp;
-				//Set transparent color for drawing bmp | ÉèÖÃµ±Ç°µÄÍ¸Ã÷É«ÓÃÓÚ»æÖÆBMP
+				//Set transparent color for drawing bmp | è®¾ç½®å½“å‰çš„é€æ˜è‰²ç”¨äºç»˜åˆ¶BMP
 				transparentColor = RGB(transparentColorTmp.r,
 					transparentColorTmp.g, transparentColorTmp.b);
 			}
@@ -214,45 +214,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 
-	//»ñÈ¡disposal method
+	//è·å–disposal method
 	int disposalMethod = ((flag & 0x1C) >> 2);
 
 #if 1
-	//´´½¨±³¾°É«±ÊË¢
+	//åˆ›å»ºèƒŒæ™¯è‰²ç¬”åˆ·
 	backgroundBrush = CreateSolidBrush(backgroundColor);
 
 
-	//´´½¨±³¾°±ÊË¢
+	//åˆ›å»ºèƒŒæ™¯ç¬”åˆ·
 #else
-	//¶ÔÓÚ¾²Ì¬Í¼Ïñ£¬
-	//Èç¹ûdisposal methodÊÇ2»ò3£¬
-	//	Èç¹ûÓĞÍ¸Ã÷É«£¬ÔòÊ¹ÓÃÍ¸Ã÷É«×÷Îªcanvas±³¾°£¬·ñÔòÊ¹ÓÃ±³¾°É«£»
-	//Èç¹ûdisposal method²»ÊÇ2»ò3
-	//  ²»ÓÃ¹Ücanvas±³¾°£¬Ò²¾ÍÊÇËµ²»ÓÃ»æÖÆcanvas±³¾°
+	//å¯¹äºé™æ€å›¾åƒï¼Œ
+	//å¦‚æœdisposal methodæ˜¯2æˆ–3ï¼Œ
+	//	å¦‚æœæœ‰é€æ˜è‰²ï¼Œåˆ™ä½¿ç”¨é€æ˜è‰²ä½œä¸ºcanvasèƒŒæ™¯ï¼Œå¦åˆ™ä½¿ç”¨èƒŒæ™¯è‰²ï¼›
+	//å¦‚æœdisposal methodä¸æ˜¯2æˆ–3
+	//  ä¸ç”¨ç®¡canvasèƒŒæ™¯ï¼Œä¹Ÿå°±æ˜¯è¯´ä¸ç”¨ç»˜åˆ¶canvasèƒŒæ™¯
 	if (disposalMethod == 2 || disposalMethod == 3)
 	{
-		if (flag & 0x01)//Èç¹ûÓĞÍ¸Ã÷É«
+		if (flag & 0x01)//å¦‚æœæœ‰é€æ˜è‰²
 			backgroundBrush = wcex.hbrBackground;
 		else
 			backgroundBrush = CreateSolidBrush(backgroundColor);
 	}
 #endif
-	//´´½¨¡¢ÉèÖÃBitmapĞÅÏ¢
-	bmi = (BITMAPINFO*)malloc(sizeof(BITMAPINFO) + 255 * sizeof(RGBQUAD));//¹²256É«£¬ºÍbmpInfoHeader.biBitCountËùÖ¸ÏàÍ¬
-	//Í·ĞÅÏ¢
-	bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);   //BITMAPINFOHEADERµÄ´óĞ¡
-	bmi->bmiHeader.biWidth = imageWidth;				//Í¼Ïñ¿í¶È£¨ÒÔÏñËØÎªµ¥Î»£©
-	bmi->bmiHeader.biHeight = -int(imageHeight);		//Í¼Ïñ¸ß¶È£¨ÒÔÏñËØÎªµ¥Î»£©£¬×¢Òâ£¡´Ë´¦È¡¸ºÖµ£¬ÒòÎªÎ»Í¼Ä¬ÈÏµÚÒ»ĞĞÊÇÍ¼Ïñ×îÏÂÃæÒ»ĞĞ£¬¶øcGif_decodeµÃµ½µÄÊı¾İµÄµÚÒ»ĞĞÊÇÍ¼Ïñ×îÉÏÃæÒ»ĞĞ
-	bmi->bmiHeader.biPlanes = 1;						//±ØĞë±»ÉèÖÃÎª1
-	bmi->bmiHeader.biBitCount = 8;						//Í³Ò»Îª256É«Í¼
-	bmi->bmiHeader.biCompression = BI_RGB;				//²»Ñ¹ËõµÄÒ»°ãbmp¸ñÊ½
-	bmi->bmiHeader.biSizeImage = 0;						//biCompressionÎªBI_RGBÊ±Ö¸¶¨¸ÃÖµÎª0
-	//ÎŞĞè¿¼ÂÇµÄÖµ
+	//åˆ›å»ºã€è®¾ç½®Bitmapä¿¡æ¯
+	bmi = (BITMAPINFO*)malloc(sizeof(BITMAPINFO) + 255 * sizeof(RGBQUAD));//å…±256è‰²ï¼Œå’ŒbmpInfoHeader.biBitCountæ‰€æŒ‡ç›¸åŒ
+	//å¤´ä¿¡æ¯
+	bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);   //BITMAPINFOHEADERçš„å¤§å°
+	bmi->bmiHeader.biWidth = imageWidth;				//å›¾åƒå®½åº¦ï¼ˆä»¥åƒç´ ä¸ºå•ä½ï¼‰
+	bmi->bmiHeader.biHeight = -int(imageHeight);		//å›¾åƒé«˜åº¦ï¼ˆä»¥åƒç´ ä¸ºå•ä½ï¼‰ï¼Œæ³¨æ„ï¼æ­¤å¤„å–è´Ÿå€¼ï¼Œå› ä¸ºä½å›¾é»˜è®¤ç¬¬ä¸€è¡Œæ˜¯å›¾åƒæœ€ä¸‹é¢ä¸€è¡Œï¼Œè€ŒcGif_decodeå¾—åˆ°çš„æ•°æ®çš„ç¬¬ä¸€è¡Œæ˜¯å›¾åƒæœ€ä¸Šé¢ä¸€è¡Œ
+	bmi->bmiHeader.biPlanes = 1;						//å¿…é¡»è¢«è®¾ç½®ä¸º1
+	bmi->bmiHeader.biBitCount = 8;						//ç»Ÿä¸€ä¸º256è‰²å›¾
+	bmi->bmiHeader.biCompression = BI_RGB;				//ä¸å‹ç¼©çš„ä¸€èˆ¬bmpæ ¼å¼
+	bmi->bmiHeader.biSizeImage = 0;						//biCompressionä¸ºBI_RGBæ—¶æŒ‡å®šè¯¥å€¼ä¸º0
+	//æ— éœ€è€ƒè™‘çš„å€¼
 	bmi->bmiHeader.biXPelsPerMeter = 0;
 	bmi->bmiHeader.biYPelsPerMeter = 0;
 	bmi->bmiHeader.biClrUsed = 0;
 	bmi->bmiHeader.biClrImportant = 0;
-	//ÑÕÉ«±í
+	//é¢œè‰²è¡¨
 	//In fact, palette_color_count+1 is the number of colors in the palette
 	//But type of palette_color_count is unsigned char, whose max value is 255,
 	// so 0 is use to represent 1 color, 2 is use to represent 2 colors, etc.
@@ -265,18 +265,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	free(palette);
 
-	//´´½¨bmp
+	//åˆ›å»ºbmp
 	hdcsource = CreateCompatibleDC(NULL);
 	if (NULL == hdcsource)
 	{
-		MessageBox(NULL, _T("CreateCompatibleDCÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("CreateCompatibleDCå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 	bitmap = CreateDIBitmap(GetDC(hWnd), &bmi->bmiHeader, CBM_INIT, vColorIndex, bmi, DIB_RGB_COLORS);
 	free(vColorIndex);
 	if (NULL == bitmap)
 	{
-		MessageBox(NULL, _T("CreateDIBitmapÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("CreateDIBitmapå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
@@ -307,27 +307,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HGDIOBJ original = SelectObject(hdcsource, bitmap);
 			if (NULL == original || HGDI_ERROR == original)
 			{
-				MessageBox(NULL, _T("SelectObjectÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+				MessageBox(NULL, _T("SelectObjectå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 				return 1;
 			}
 
-			//»æÖÆ»­²¼
-			//Draw a background soild rect for the canvas | »­Ò»¸ö¾ØĞÎ¿ò±³¾°±íÊ¾»­²¼
+			//ç»˜åˆ¶ç”»å¸ƒ
+			//Draw a background soild rect for the canvas | ç”»ä¸€ä¸ªçŸ©å½¢æ¡†èƒŒæ™¯è¡¨ç¤ºç”»å¸ƒ
 			if (0 == FillRect(hdc, &canvasRect, backgroundBrush))
 			{
-				OutputDebugString(_T("FillRectÊ§°Ü£¡\n"));
+				OutputDebugString(_T("FillRectå¤±è´¥ï¼\n"));
 				return E_FAIL;
 			}
 
-			//Draw the image | »æÖÆÍ¼Ïñ
-			if (! (flag & 0x02))//No transparent color | Ã»ÓĞÍ¸Ã÷É«
+			//Draw the image | ç»˜åˆ¶å›¾åƒ
+			if (! (flag & 0x02))//No transparent color | æ²¡æœ‰é€æ˜è‰²
 			{
 				if (NULL == BitBlt(hdc,
 					canvasRect.left + image_position_x, canvasRect.top + image_position_y,
 					imageWidth, imageHeight,
 					hdcsource, 0, 0, SRCCOPY))
 				{
-					OutputDebugString(_T("BitBltÊ§°Ü£¡\n"));
+					OutputDebugString(_T("BitBltå¤±è´¥ï¼\n"));
 					return E_FAIL;
 				}
 			}
@@ -340,7 +340,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					hdcsource, 0, 0, imageWidth, imageHeight,
 					transparentColor))
 				{
-					OutputDebugString(_T("TransparentBltÊ§°Ü£¡\n"));
+					OutputDebugString(_T("TransparentBltå¤±è´¥ï¼\n"));
 					return E_FAIL;
 				}
 			}

@@ -25,15 +25,15 @@ unsigned int GetBitFromByte(unsigned char theByte, int index)
     return theByte & bitmask[index] >> index;
 }
 
-//´Ó×Ö½ÚÖĞÈ¡³öÁ¬ĞøµÄÎ»£¬µÃµ½ÆäÖµ
-//theByte ²Ù×÷µÄ×Ö½Ú
-//start µÍÎ»
-//end ¸ßÎ»
-//¾ù´Ó0¿ªÊ¼¼ÆÊı
+//ä»å­—èŠ‚ä¸­å–å‡ºè¿ç»­çš„ä½ï¼Œå¾—åˆ°å…¶å€¼
+//theByte æ“ä½œçš„å­—èŠ‚
+//start ä½ä½
+//end é«˜ä½
+//å‡ä»0å¼€å§‹è®¡æ•°
 unsigned char GetBitRangeFromByte(unsigned char theByte, int start, int end)
 {
-    //È·ÈÏÏÂ±íÎŞÎó
-    // (dummy)±íÊ¾Õ¼Î»ÓÃ£¬Êµ¼Ê¼ÆËã²»Ê¹ÓÃ£¬ÒòÎª²»·½±ãrshiftµÃµ½maskºóµÄÖµ
+    //ç¡®è®¤ä¸‹è¡¨æ— è¯¯
+    // (dummy)è¡¨ç¤ºå ä½ç”¨ï¼Œå®é™…è®¡ç®—ä¸ä½¿ç”¨ï¼Œå› ä¸ºä¸æ–¹ä¾¿rshiftå¾—åˆ°maskåçš„å€¼
     static unsigned char bitmask[8][8] =
     {
         {
@@ -124,7 +124,7 @@ unsigned char GetBitRangeFromByte(unsigned char theByte, int start, int end)
     return (theByte & bitmask[start][end]) >> (start);
 }
 
-//Ê¹ÓÃÇ°ÇëÈ·ÈÏÄãÓÃµÄÊÇchar£¡
+//ä½¿ç”¨å‰è¯·ç¡®è®¤ä½ ç”¨çš„æ˜¯charï¼
 unsigned int CombineByte(
     unsigned int lowByte, unsigned int lowByteLength,
     unsigned int highByte, unsigned int highByteLength )

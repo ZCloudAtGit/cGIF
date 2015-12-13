@@ -3,7 +3,7 @@
 Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
-This code is licensed under the GPL license. See Licence.
+This code is licensed under the Apache 2.0 license. See Licence.
 */
 
 #include <windows.h>
@@ -24,7 +24,7 @@ extern "C"
 
 #define APP_TITLE "GIF Viewer via Direct3D 9 (Static)"
 
-//ÓÃÓÚÑÕÉ«±í£¨RGBË³Ðò£¬×¢£ºGDIµÄRGBTRIPLEÎªBGRË³Ðò£©
+//ç”¨äºŽé¢œè‰²è¡¨ï¼ˆRGBé¡ºåºï¼Œæ³¨ï¼šGDIçš„RGBTRIPLEä¸ºBGRé¡ºåºï¼‰
 typedef struct _tagRGBTriple
 {
 	BYTE r;
@@ -39,8 +39,8 @@ static TCHAR szWindowClass[] = _T("ViewViaDirect3D9_StaticWindowClass");
 static TCHAR szTitle[] = _T(APP_TITLE);
 HDC hdc = 0;
 
-//GIFÏà¹ØÊý¾Ý
-//cGIF²ÎÊý
+//GIFç›¸å…³æ•°æ®
+//cGIFå‚æ•°
 unsigned char* pColorIndexArray = NULL;
 unsigned int canvasWidth = 0, canvasHeight = 0;
 unsigned int image_position_x = 0, image_position_y = 0;
@@ -53,7 +53,7 @@ unsigned char transparent_color_index;
 char flag = 0;
 int disposalMethod = 0;
 
-//Direct3DÏà¹ØÊý¾Ý
+//Direct3Dç›¸å…³æ•°æ®
 D3DVIEWPORT9 viewport;
 IDirect3D9* g_pD3D = 0;
 IDirect3DDevice9* g_pDevice = 0;
@@ -110,7 +110,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!RegisterClassEx(&wcex))
 	{
-		MessageBox(NULL, _T("RegisterClassExÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("RegisterClassExå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
@@ -128,13 +128,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (!hWnd)
 	{
-		MessageBox(NULL, _T("CreateWindowÊ§°Ü£¡"), _T(APP_TITLE), NULL);
+		MessageBox(NULL, _T("CreateWindowå¤±è´¥ï¼"), _T(APP_TITLE), NULL);
 		return 1;
 	}
 
-	hdc = GetDC(hWnd);//±£´æDCµ½È«¾Ö±äÁ¿ÖÐ£¬ÒòÎªºóÃæÆµ·±Ê¹ÓÃ
+	hdc = GetDC(hWnd);//ä¿å­˜DCåˆ°å…¨å±€å˜é‡ä¸­ï¼Œå› ä¸ºåŽé¢é¢‘ç¹ä½¿ç”¨
 
-	//¶ÁÈ¡GIFÍ¼Ïñ£¬È¡µÃÍ¼ÏñÊý¾Ý
+	//è¯»å–GIFå›¾åƒï¼Œå–å¾—å›¾åƒæ•°æ®
 	cGif_Error error = cGif_decode_static_indexed(
 		lpCmdLine,
 		&pColorIndexArray,
@@ -148,7 +148,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (error != cGif_Error::cGif_Success)
 	{
 		char buffer[128];
-		sprintf(buffer, "½âÎöGIFÍ¼ÏñÊ§°Ü£¡´íÎó£º%s", cGif_error_text(error));
+		sprintf(buffer, "è§£æžGIFå›¾åƒå¤±è´¥ï¼é”™è¯¯ï¼š%s", cGif_error_text(error));
 		MessageBoxA(NULL, buffer, APP_TITLE, NULL);
 		return 1;
 	}
@@ -161,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	BOOL IsLoaded = FALSE;
 	while (msg.message != WM_QUIT)
 	{
-		//´¦ÀíWindowsÏûÏ¢
+		//å¤„ç†Windowsæ¶ˆæ¯
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -184,20 +184,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				viewport.MinZ = 0.0f;
 				viewport.MaxZ = 1.0f;
 				LoadQuad(imageWidth, imageHeight);
-				//½«Í¼ÏñÊý¾Ý´«ËÍµ½Direct3D9ÒýÇæ
+				//å°†å›¾åƒæ•°æ®ä¼ é€åˆ°Direct3D9å¼•æ“Ž
 				LoadTexture();
-				//³õÊ¼»¯shader
+				//åˆå§‹åŒ–shader
 				InitShader();
 				IsLoaded = TRUE;
 			}
-			else//ÒÑ´´½¨£¬ÓÃD3DäÖÈ¾Í¼Ïñ
+			else//å·²åˆ›å»ºï¼Œç”¨D3Dæ¸²æŸ“å›¾åƒ
 			{
 				DrawPicture();
 			}
 		}
 	}
 
-	//×¢ÏúwindowÀà
+	//æ³¨é”€windowç±»
 	UnregisterClass(szWindowClass, hInstance);
 
 	return (int)msg.wParam;
@@ -210,16 +210,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 
-		//³õÊ¼»¯COM
+		//åˆå§‹åŒ–COM
 		CoInitialize(NULL);
-		//´´½¨D3D9¶ÔÏó
+		//åˆ›å»ºD3D9å¯¹è±¡
 		HRESULT hr = S_OK;
 		g_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 		if (g_pD3D==NULL)
 		{
-			OutputDebugStringA("´´½¨D3D9¶ÔÏóÊ§°Ü£¡\n");
+			OutputDebugStringA("åˆ›å»ºD3D9å¯¹è±¡å¤±è´¥ï¼\n");
 		}
-		//´´½¨D3D9Éè±¸
+		//åˆ›å»ºD3D9è®¾å¤‡
 		D3DDISPLAYMODE d3ddm;
 		hr = g_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm);
 		checkD3D9Error(hr);
@@ -490,7 +490,7 @@ void SetConstants()
 
 void LoadQuad(int width, int height)
 {
-	//a quad for rendering the image | Ò»¸ö³¤·½ÐÎ£¬Í¼Ïñ»á±»»æÖÆÔÚËüÉÏÃæ
+	//a quad for rendering the image | ä¸€ä¸ªé•¿æ–¹å½¢ï¼Œå›¾åƒä¼šè¢«ç»˜åˆ¶åœ¨å®ƒä¸Šé¢
 	//The quad (0,0,width,height) is moved by (-0.5*width, -0.5*height)
 	//so the center of it is at (0,0,0)
 	//minus 0.5f to locate the pixel well
@@ -524,13 +524,13 @@ void DrawPicture()
 {
 	HRESULT hr = S_OK;
 
-	//Çå³ýÕû¸ö¿Í»§Çø
+	//æ¸…é™¤æ•´ä¸ªå®¢æˆ·åŒº
 	hr = g_pDevice->SetViewport(&viewport);
 	checkD3D9Error(hr);
 	hr = g_pDevice->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_COLORVALUE(0.8f, 0.8f, 0.8f, 1.0f), 1.0f, 0);
 	checkD3D9Error(hr);
 
-	//Èç¹ûÊ¹ÓÃÍ¸Ã÷É«£¬Í¨¹ýAlpha TestÈ¥³ýÍ¸Ã÷ÏñËØ
+	//å¦‚æžœä½¿ç”¨é€æ˜Žè‰²ï¼Œé€šè¿‡Alpha TeståŽ»é™¤é€æ˜Žåƒç´ 
 	if (flag & 0x02)
 	{
 		hr = g_pDevice->SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);

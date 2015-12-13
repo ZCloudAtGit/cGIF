@@ -16,11 +16,11 @@ This code is licensed under the Apache 2.0 license. See Licence.
 
 #define MAX_CODE_CONTENT_LENGHTH 512 //Max length of the content of a code
 //TODO
-//È¥³ıÕâ¸ö¼ÙÉè£¡
-//·ñÔòÈç¹ûÓĞcodeµÄµÄContentµÄ³¤¶È³¬¹ıMAX_CODE_CONTENT_LENGHTHÊ±£¬½âÎö³ö´í
+//å»é™¤è¿™ä¸ªå‡è®¾ï¼
+//å¦åˆ™å¦‚æœæœ‰codeçš„çš„Contentçš„é•¿åº¦è¶…è¿‡MAX_CODE_CONTENT_LENGHTHæ—¶ï¼Œè§£æå‡ºé”™
 
 /*
-cGIF´íÎó¶¨Òå
+cGIFé”™è¯¯å®šä¹‰
 */
 typedef enum _error
 {
@@ -39,7 +39,7 @@ typedef struct _Flag
 	unsigned char transparent : 1;
 } cGif_Flag;
 
-#pragma region »ù´¡½á¹¹¶¨Òå
+#pragma region åŸºç¡€ç»“æ„å®šä¹‰
 /* the header */
 struct _Header
 {
@@ -63,7 +63,7 @@ struct _LogicalScreenDescriptor
 typedef struct _LogicalScreenDescriptor LogicalScreenDescriptor;
 
 /* Color
-	ÓÃÓÚGlobal color table
+	For Global color table
 		Local color table
 */
 struct _Color
@@ -104,16 +104,16 @@ typedef struct _ColorTable ColorTable;
 /* Image Descriptor */
 struct _ImageDescriptor
 {
-	unsigned char Separator;		//³£Êı0x2C
-	unsigned short LeftPosition;	//Í¼Ïñ×ó±ßÑØµÄÎ»ÖÃ
-	unsigned short TopPosition;		//Í¼ÏñÉÏ±ßÑØµÄÎ»ÖÃ
-	unsigned short Width;			//Í¼Ïñ¿í¶È
-	unsigned short Height;			//Í¼Ïñ¸ß¶È
-	unsigned int LocalColorTableFlag : 1;	//Local color tableÊÇ·ñ¿ÉÓÃ
-	unsigned int InterlaceFlag : 1;			//Í¼ÏñÊÇ·ñÊÇ½»´íµÄ
-	unsigned int SortFlag : 1;				//Local color tableÊÇ·ñÊÇÓĞĞòµÄ
-	unsigned int Reserved : 2;				//±£ÁôÎ»
-	unsigned int SizeOfLocalColorTable : 3;	//Local color tableµÄ´óĞ¡
+	unsigned char Separator;		//å¸¸æ•°0x2C
+	unsigned short LeftPosition;	//å›¾åƒå·¦è¾¹æ²¿çš„ä½ç½®
+	unsigned short TopPosition;		//å›¾åƒä¸Šè¾¹æ²¿çš„ä½ç½®
+	unsigned short Width;			//å›¾åƒå®½åº¦
+	unsigned short Height;			//å›¾åƒé«˜åº¦
+	unsigned int LocalColorTableFlag : 1;	//Local color tableæ˜¯å¦å¯ç”¨
+	unsigned int InterlaceFlag : 1;			//å›¾åƒæ˜¯å¦æ˜¯äº¤é”™çš„
+	unsigned int SortFlag : 1;				//Local color tableæ˜¯å¦æ˜¯æœ‰åºçš„
+	unsigned int Reserved : 2;				//ä¿ç•™ä½
+	unsigned int SizeOfLocalColorTable : 3;	//Local color tableçš„å¤§å°
 };
 typedef struct _ImageDescriptor ImageDescriptor;
 
@@ -156,45 +156,49 @@ typedef struct _ImageData ImageData;
 
 typedef struct _cGif_State_Global
 {
-	LogicalScreenDescriptor lsd;		//Âß¼­ÆÁÄ»ÃèÊö·û
-	ColorTable gct;						//È«¾ÖColor table
-	ApplicationExtension ae;			//Ó¦ÓÃ³ÌĞò¿ØÖÆÀ©Õ¹(ÏÖÔÚµÄÍ¼ÏñÖĞ½ö´æÔÚ¡°NETSCAPE2.0¡±ÕâÖÖÀ©Õ¹)
-	cGif_Error error;					//´íÎó
+	LogicalScreenDescriptor lsd;		//é€»è¾‘å±å¹•æè¿°ç¬¦
+	ColorTable gct;						//å…¨å±€Color table
+	ApplicationExtension ae;			//åº”ç”¨ç¨‹åºæ§åˆ¶æ‰©å±•(ç°åœ¨çš„å›¾åƒä¸­ä»…å­˜åœ¨â€œNETSCAPE2.0â€è¿™ç§æ‰©å±•)
+	cGif_Error error;					//é”™è¯¯
 } cGif_State_Global;
 
 typedef struct _cGif_State_Frame
 {
-	ColorTable lct;						//±¾µØColor table
-	GraphicsControlExtension gce;		//Í¼Ïñ¿ØÖÆÀ©Õ¹
-	ImageDescriptor imgDesc;			//Í¼ÏñÃèÊö·û
+	ColorTable lct;						//æœ¬åœ°Color table
+	GraphicsControlExtension gce;		//å›¾åƒæ§åˆ¶æ‰©å±•
+	ImageDescriptor imgDesc;			//å›¾åƒæè¿°ç¬¦
 } cGif_State_Frame;
 
-#pragma region »ù´¡½á¹¹²Ù×÷º¯ÊıÉùÃ÷
+#pragma region åŸºç¡€ç»“æ„æ“ä½œå‡½æ•°å£°æ˜
 
-#pragma region SubBlock²Ù×÷º¯ÊıÉùÃ÷
+#pragma region SubBlockæ“ä½œå‡½æ•°å£°æ˜
 //Release allocated memory for Sub Data
 void ReleaseSubBlock(ImageData* pImgData, ApplicationExtension* pAppExt, CommentExtension* pCE);
 
-//½«ImageDataÖĞµÄSubblockÊı¾İÕûºÏÎªÒ»Õû¿é
+//å°†ImageDataä¸­çš„Subblockæ•°æ®æ•´åˆä¸ºä¸€æ•´å—
 void CombineSubBlocks(ImageData* pImgData, unsigned char** pCodeData, unsigned int* pCodeDataByteSize);
 #pragma endregion
 
-#pragma region ½âÑ¹ËõÏà¹Øº¯ÊıÉùÃ÷
-//´ÓcodeÊı¾İ¿éÖĞÌáÈ¡codeĞòÁĞ
+#pragma region è§£å‹ç¼©ç›¸å…³å‡½æ•°å£°æ˜
+//ä»codeæ•°æ®å—ä¸­æå–codeåºåˆ—
 cGif_Error ExtractCodeArray(unsigned char* CodeData, unsigned int CodeDataByteSize,
 	unsigned int LZWMinCodeSize,
 	unsigned int** ppCodeArray, unsigned int* pCodeArrayCount);
 
-//½«codeĞòÁĞ·­ÒëÎªÑÕÉ«Ë÷Òı
+//å°†codeåºåˆ—ç¿»è¯‘ä¸ºé¢œè‰²ç´¢å¼•
 cGif_Error TranslateCodeArray(unsigned char** ppColorIndexArray,
 	ImageData* pImgData, ImageDescriptor* pImgDesc, unsigned int* CodeArray, unsigned int CodeArrayCount);
 
-//¶ÔÍ¼ÏñÊı¾İ½øĞĞ½âÑ¹Ëõ
+//å¯¹å›¾åƒæ•°æ®è¿›è¡Œè§£å‹ç¼©
 cGif_Error DecompressImageData(unsigned char** out,
 	ImageData* pImgData, ImageDescriptor* pImgDesc);
 #pragma endregion
 
-#pragma region »ù´¡½á¹¹¶ÁÈ¡º¯ÊıÉùÃ÷
+#pragma region compression functions | å‹ç¼©ç›¸å…³å‡½æ•°å£°æ˜
+
+#pragma endregion
+
+#pragma region åŸºç¡€ç»“æ„è¯»å–å‡½æ•°å£°æ˜
 //Read Header
 void ReadHeader(Header* pHeader, FILE* file);
 
@@ -230,9 +234,39 @@ void ReadCE(CommentExtension* pCommentExt, FILE* file);
 void SkipCE(FILE* file);
 #pragma endregion
 
+
+#pragma region basic structure writing function | åŸºç¡€ç»“æ„å†™å…¥å‡½æ•°å£°æ˜
+//Write Header
+void WriteHeader(Header* pHeader, FILE* file);
+
+//Write Logical Screen Descriptor
+void WriteLCD(LogicalScreenDescriptor* pLSD, FILE* file);
+
+//Write Glocal Color Table
+void WriteGCT(LogicalScreenDescriptor* pLSD, ColorTable* pGCT, FILE* file);
+
+//Write Graphics Control Extension
+void WriteGCE(GraphicsControlExtension* pGCE, FILE* file);
+
+//Write Image Descriptor
+void WriteImageDesc(ImageDescriptor* pImgDesc, FILE* file);
+
+//Write Local Color Table
+void WriteLCT(ImageDescriptor* pImgDesc, ColorTable* pLCT, FILE* file);
+
+//Write Plain Text Extension
+void WritePTE(FILE* file);
+
+void WriteImageData(ImageData* pImgData, FILE* file);
+
+//Write Graphic Rendering Block
+void WriteGRB(ImageData* pImgData, cGif_State_Frame* state, FILE* file);
+
+//Write Application Extension
+void WriteAE(ApplicationExtension* pAppExt, FILE* file);
 #pragma endregion
 
-#pragma region »ù´¡½á¹¹´òÓ¡º¯ÊıÉùÃ÷
+#pragma region åŸºç¡€ç»“æ„æ‰“å°å‡½æ•°å£°æ˜
 void HeaderToString(Header* pHeader, char* buffer);
 void LSDToString(LogicalScreenDescriptor* pLSD, char* buffer);
 void ImageDescriptorToString(ImageDescriptor* pDesc, char* buffer);
@@ -244,33 +278,33 @@ void GCTToString(const ColorTable* GCT, char* stringBuffer );
 void LCTToString(const ColorTable* LCT, char* stringBuffer);
 #pragma endregion
 
-#pragma region Code table¶¨Òå¼°Ïà¹Øº¯ÊıÉùÃ÷
-//Code table¶¨Òå
+#pragma region Code tableå®šä¹‰åŠç›¸å…³å‡½æ•°å£°æ˜
+//Code tableå®šä¹‰
 //value
-//  code #i, i¾ÍÊÇcodeµÄvalue
+//  code #i, iå°±æ˜¯codeçš„value
 //content
-//  ¶şÎ¬Êı×é
-//      content[i]±íÊ¾code #iµÄcontent
-//      content[i][j]±íÊ¾code #iµÄcontentµÄ¸ßÎ»ÆğµÚj¸öÊı
+//  äºŒç»´æ•°ç»„
+//      content[i]è¡¨ç¤ºcode #içš„content
+//      content[i][j]è¡¨ç¤ºcode #içš„contentçš„é«˜ä½èµ·ç¬¬jä¸ªæ•°
 //length
-//  Ò»Î¬Êı×é
-//      length[i]±íÊ¾code #iµÄcontent³¤¶È
+//  ä¸€ç»´æ•°ç»„
+//      length[i]è¡¨ç¤ºcode #içš„contenté•¿åº¦
 //count
-//  ±íÊ¾code tableÖĞµÄcodeÊıÁ¿
+//  è¡¨ç¤ºcode tableä¸­çš„codeæ•°é‡
 //
-//ÈçµÚ7¸öcode£º(code #7, content 112, length 3)
-//  ÔÚCodeTableÖĞµÄ±íÊ¾¾ÍÊÇ
+//å¦‚ç¬¬7ä¸ªcodeï¼š(code #7, content 112, length 3)
+//  åœ¨CodeTableä¸­çš„è¡¨ç¤ºå°±æ˜¯
 //      content[7] = {1,1,2}; length[7] = 3;
-//  »òÕß£¬Í¬ÑùµÄ£º
+//  æˆ–è€…ï¼ŒåŒæ ·çš„ï¼š
 //      content[7][0] = 1;
 //      content[7][1] = 1;
 //      content[7][2] = 2;
 //      length[7] = 3;
 //
-//valueµÄ·¶Î§Îª[2^(2-1),2^(12-1)]¼´[2, 4096]
-//      ¸½¼ÓÉÏClear Code ºÍ EOI Code¾ÍÊÇ[4, 4098]
-//content(ÑÕÉ«Ë÷ÒıĞòÁĞ)µÄ³¤¶ÈµÄ·¶Î§Îª[1,INT_MAX]
-//contentÖĞÊı×Ö(ÑÕÉ«Ë÷ÒıÖµ)µÄ·¶Î§Îª[0,255]
+//valueçš„èŒƒå›´ä¸º[2^(2-1),2^(12-1)]å³[2, 4096]
+//      é™„åŠ ä¸ŠClear Code å’Œ EOI Codeå°±æ˜¯[4, 4098]
+//content(é¢œè‰²ç´¢å¼•åºåˆ—)çš„é•¿åº¦çš„èŒƒå›´ä¸º[1,INT_MAX]
+//contentä¸­æ•°å­—(é¢œè‰²ç´¢å¼•å€¼)çš„èŒƒå›´ä¸º[0,255]
 struct _CodeTable
 {
 	unsigned char** content;//4098, 2 << (12-1) + 2;//4096 + 2

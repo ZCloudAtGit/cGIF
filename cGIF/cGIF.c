@@ -75,7 +75,7 @@ cGif_Error cGif_decode_static_indexed(
 	cGif_State_Global globalState = { 0 };
 	cGif_State_Frame frameState = { 0 };
 
-	//open GIF file | ´ò¿ªgifÎÄ¼ş
+	//open GIF file | æ‰“å¼€gifæ–‡ä»¶
 	file = fopen(filePath, "rb");
 	if (file == NULL)
 	{
@@ -106,10 +106,10 @@ cGif_Error cGif_decode_static_indexed(
 
 	while (1)
 	{
-		//¶ÁÈ¡¿ÉÄÜµÄIntroducerºÍLabel
+		//è¯»å–å¯èƒ½çš„Introducerå’ŒLabel
 		fread(&byteBuf0, sizeof(byteBuf0), 1, file);
 		fread(&byteBuf1, sizeof(byteBuf1), 1, file);
-		fseek(file, -2, SEEK_CUR);//»ØÍË2×Ö½Ú
+		fseek(file, -2, SEEK_CUR);//å›é€€2å­—èŠ‚
 		if (byteBuf0 == 0x21 && byteBuf1 == 0xf9)
 		{
 			ReadGCE(&frameState.gce, file);//Graphic Control Extension
@@ -123,7 +123,7 @@ cGif_Error cGif_decode_static_indexed(
 			ReadGRB(&imgData, &frameState, file);//Graphic-Rendering Block
 			globalState.error = DecompressImageData(indexes, &imgData, &frameState.imgDesc);
 			ReleaseSubBlock(&imgData, NULL, NULL);
-			break;//Ö»È¡¶Áµ½µÄµÚÒ»¸öImageÊı¾İ
+			break;//åªå–è¯»åˆ°çš„ç¬¬ä¸€ä¸ªImageæ•°æ®
 		}
 		else if (byteBuf0 == 0x21 && byteBuf1 == 0xff)
 		{
@@ -441,12 +441,12 @@ const char* cGif_error_text(cGif_Error e)
 {
 	switch (e)
 	{
-	case cGif_Success: return "No error, everything went OK. | Ã»ÓĞ´íÎó£¬³É¹¦";
-	case cGif_File_Not_Exist: return "Problem when trying to open the file: File do not exist. | ÎÄ¼ş²»´æÔÚ";
-	case cGif_Unknown_Introducer_Or_Label: return "Problem when reading introducer or label: unknown introducer or label. The file is corrupted. | Î´ÖªµÄIntroducer»òLabel£¬ÎÄ¼ş¿ÉÄÜÒÑ¾­Ëğ»µ";
-	//case cGif_Next_Not_Clear_Or_EOI: return "Problem when extracting code array: the next code is not clear code or EOI code. | codeĞòÁĞÌáÈ¡´íÎó£¬ÏÂÒ»¸öcode²»ÊÇClear code»òÕßEOF code";
-	case cGif_Encounter_EOI_Before_ImageData_Completed: return "Problem when extracting code array: EOI code is encountered before finishing reading image data. | codeĞòÁĞÌáÈ¡´íÎó£¬ÔÚÍ¼ÏñÊı¾İ½âÎöÍê³ÉÖ®Ç°Óöµ½ÁËEOF code";
-	case cGif_Too_Many_Frames: return "Too many frames in this picture. Processing Stopped. | Í¼ÏñÎÄ¼şÖĞµÄÖ¡¹ı¶à£¬Í£Ö¹½âÎö";
+	case cGif_Success: return "No error, everything went OK. | æ²¡æœ‰é”™è¯¯ï¼ŒæˆåŠŸ";
+	case cGif_File_Not_Exist: return "Problem when trying to open the file: File do not exist. | æ–‡ä»¶ä¸å­˜åœ¨";
+	case cGif_Unknown_Introducer_Or_Label: return "Problem when reading introducer or label: unknown introducer or label. The file is corrupted. | æœªçŸ¥çš„Introduceræˆ–Labelï¼Œæ–‡ä»¶å¯èƒ½å·²ç»æŸå";
+	//case cGif_Next_Not_Clear_Or_EOI: return "Problem when extracting code array: the next code is not clear code or EOI code. | codeåºåˆ—æå–é”™è¯¯ï¼Œä¸‹ä¸€ä¸ªcodeä¸æ˜¯Clear codeæˆ–è€…EOF code";
+	case cGif_Encounter_EOI_Before_ImageData_Completed: return "Problem when extracting code array: EOI code is encountered before finishing reading image data. | codeåºåˆ—æå–é”™è¯¯ï¼Œåœ¨å›¾åƒæ•°æ®è§£æå®Œæˆä¹‹å‰é‡åˆ°äº†EOF code";
+	case cGif_Too_Many_Frames: return "Too many frames in this picture. Processing Stopped. | å›¾åƒæ–‡ä»¶ä¸­çš„å¸§è¿‡å¤šï¼Œåœæ­¢è§£æ";
 	}
-	return "Unknown error code. | Î´ÖªµÄ´íÎóÂë";
+	return "Unknown error code. | æœªçŸ¥çš„é”™è¯¯ç ";
 }

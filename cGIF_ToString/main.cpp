@@ -3,7 +3,7 @@
 Website: http:\\zwcloud.net
 Email: zwcloud@yeah.net
 
-This code is licensed under the GPL license. See Licence.
+This code is licensed under the Apache 2.0 license. See Licence.
 */
 
 #ifdef _DEBUG
@@ -79,8 +79,8 @@ int main(int argc, char* argv[])
 		{
 			unsigned int i = 0, j = 0;
 
-			printf("The canvas size is %d°¡%d\n", canvasWidth, canvasHeight);
-			printf("The image is located at (%d,%d), size: %d°¡%d\n",
+			printf("The canvas size is %d√ó%d\n", canvasWidth, canvasHeight);
+			printf("The image is located at (%d,%d), size: %d√ó%d\n",
 				image_position_x, image_position_y,
 				imageWidth, imageHeight);
 			puts("palette:");
@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 		{
 			unsigned int i = 0, j = 0, k = 0;
 
-			printf("The canvas size is %d°¡%d.\n", canvasWidth, canvasHeight);
+			printf("The canvas size is %d√ó%d.\n", canvasWidth, canvasHeight);
 			if (globalPalette != nullptr)
 			{
 				puts("A global color table exists.");
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
 			{
 				unsigned char* pColorIndexArray = ppColorIndexArray[i];
 				printf("--Frame %d--\n", i);
-				printf("The image is located at (%d,%d), size: %d°¡%d\n",
+				printf("The image is located at (%d,%d), size: %d√ó%d\n",
 					image_position_x[i], image_position_y[i],
 					imageWidth[i], imageHeight[i]);
 				if (palette[i] == nullptr)
