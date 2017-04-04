@@ -2,9 +2,10 @@
 just another GIF decoder/encoder[TODO] written in C<br/>
 Written with VS2013.
 
-#Solution Structure
+# Solution Structure
+
 Folder                        | Content
---------                      | ---
+------------------------------| ---
 __cGIF__                      | the cGIF library (now compiled as a static lib)
 __cGIFTest__                  | some unit test
 __cGIF_ToString__             | a tool that print a GIF file content as string (a win32 console application)
@@ -14,11 +15,12 @@ __ViewViaOpenGL4_Static__     | a demo program that can render a static GIF file
 __ViewViaGDI_Dynamic__        | a demo program that can render a dynamic GIF file with GDI (a win32 window application)
 __GIFSample__                 | some GIF files that used as test materials
 
-#TODO
+# TODO
 Write some demos that render a dynamic GIF image with Direct3D 9 and OpenGL4.(Working on..)
 Write the GIF encoder.
 
-#LICENSE
+# LICENSE
+
 __Apache 2.0__  
 cGIF is licensed under the Apache 2.0 license.
 
